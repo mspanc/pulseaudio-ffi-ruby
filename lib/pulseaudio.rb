@@ -46,7 +46,10 @@ module PulseAudio
         
       end    
     end  
-      
+  end
+  
+  class Operation
+  
   end
   
   class Context
@@ -83,12 +86,67 @@ module PulseAudio
     end
 
     def connect(options = {})
-      pa_context_connect @context, options[:server], 0, nil            
+      pa_context_connect @context, options[:server], 0, nil     # FIXME hardcoded 0 and nil         
+      # TODO proplist support
+    end
+    
+    def disconnect
+      pa_context_disconnect @context
     end
     
     def state
       pa_context_get_state @context
     end
+    
+    def index
+      pa_context_get_index @context
+    end
+    
+    def protocol_version
+      pa_context_get_protocol_version @context
+    end
+    
+    def server_name
+      pa_context_get_server @context
+    end
+    
+    def server_name=(name)
+      # TODO
+    end
+    
+    def default_sink
+      # TODO
+    end
+
+    def default_sink=(sink)
+      # TODO
+    end
+
+    def default_source
+      # TODO
+    end
+
+    def default_source=(source)
+      # TODO
+    end
+    
+    def server_protocol_version
+      pa_context_get_server_protocol_version @context
+    end
+    
+    def is_local?
+      pa_context_is_local(@context) == 1
+    end
+    
+    def is_pending?
+      pa_context_is_pending(@context) != 0
+    end
+    
+    def exit_daemon
+      # TODO
+    end
+    
+    
     
     protected
 =begin    
@@ -101,6 +159,7 @@ module PulseAudio
 =end
       attach_function :pa_context_new, [ :pointer, :string ], :pointer
       
+
 =begin    
       int pa_context_connect	(	pa_context * 	c,
       const char * 	server,
@@ -113,6 +172,13 @@ module PulseAudio
 =end
       attach_function :pa_context_connect, [ :pointer, :string, :int, :pointer ], :int  # FIXME int as third arg, should be structure
 
+=begin      
+      void pa_context_disconnect	(	pa_context * 	c )	
+      Terminate the context connection immediately.      
+=end
+      attach_function :pa_context_disconnect, [ :pointer ], :void
+
+
 =begin
       void pa_context_set_state_callback	(	pa_context * 	c,
       pa_context_notify_cb_t 	cb,
@@ -123,12 +189,77 @@ module PulseAudio
       callback :pa_context_notify_cb_t, [ :pointer, :pointer ], :void
       attach_function :pa_context_set_state_callback, [ :pointer, :pa_context_notify_cb_t, :pointer ], :void
 
+
+
+=begin
+      uint32_t pa_context_get_index	(	pa_context * 	s )	
+      Return the client index this context is identified in the server with.
+
+      This is useful for usage with the introspection functions, such as pa_context_get_client_info().
+=end
+      attach_function :pa_context_get_index, [ :pointer ], :uint32
+      
+      
+=begin
+      uint32_t pa_context_get_protocol_version	(	pa_context * 	c )	
+      Return the protocol version of the library.
+=end      
+      attach_function :pa_context_get_protocol_version, [ :pointer ], :uint32
+      
+=begin
+      const char* pa_context_get_server	(	pa_context * 	c )	
+      Return the server name this context is connected to.
+=end      
+      attach_function :pa_context_get_server, [ :pointer ], :string
+      
+=begin
+      uint32_t pa_context_get_server_protocol_version	(	pa_context * 	c )	
+      Return the protocol version of the connected server.      
+=end
+      attach_function :pa_context_get_server_protocol_version, [ :pointer ], :uint32
+
 =begin      
       pa_context_state_t pa_context_get_state	(	pa_context * 	c )	
       Return the current context status.      
 =end
-      attach_function :pa_context_get_state, [:pointer], :context_state
+      attach_function :pa_context_get_state, [ :pointer ], :context_state
+
+=begin
+      int pa_context_is_local	(	pa_context * 	c )	
+      Returns 1 when the connection is to a local daemon.
+
+      Returns negative when no connection has been made yet.
+=end
+      attach_function :pa_context_is_local, [ :pointer ], :int
+
+
+=begin
+      int pa_context_is_pending	(	pa_context * 	c )	
+      Return non-zero if some data is pending to be written to the connection.
+=end
+      attach_function :pa_context_is_pending, [ :pointer ], :int
+
+=begin
+      pa_operation* pa_context_set_name	(	pa_context * 	c,
+      const char * 	name,
+      pa_context_success_cb_t 	cb,
+      void * 	userdata 
+      )		
+      Set a different application name for context on the server.
+=end
+      callback :pa_context_success_cb_t, [ :pointer, :int, :pointer ], :void
+      attach_function :pa_context_set_name, [ :pointer, :string, :pa_context_success_cb_t, :pointer ], :pointer
       
+=begin
+      pa_operation* pa_context_exit_daemon	(	pa_context * 	c,
+      pa_context_success_cb_t 	cb,
+      void * 	userdata 
+      )		
+      Tell the daemon to exit.
+
+      The returned operation is unlikely to complete succesfully, since the daemon probably died before returning a success notification
+=end      
+      attach_function :pa_context_exit_daemon, [ :pointer, :pa_context_success_cb_t, :pointer ], :pointer
   end
 end
 
