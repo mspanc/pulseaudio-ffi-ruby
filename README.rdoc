@@ -1,25 +1,40 @@
 = Introduction
 
-This is a wrapper for PulseAudio[http://www.pulseaudio.org] for Ruby.
+This is a wrapper to PulseAudio[http://www.pulseaudio.org] for Ruby.
 
-Here's a quick code sample. Currently no docs. Currently nothing more than just connecting to PA server but this is rapidly evolving project.
+Here comes a short code sample. Currently no docs. Currently it does nothing more than just connecting to PA server and reading some of it parameters, but please note that this is new and rapidly evolving project.
 
   require 'glib2'
-  require 'pulseaudio'
+  require 'lib/pulseaudio'
 
   pa = PulseAudio::Context.new :mainloop => PulseAudio::MainLoop::GLib::Loop.new,
-                               :state_callback_proc => Proc.new{ |context, user_data| puts context.state.inspect }
+                               :state_callback_proc => Proc.new{ |context, user_data| 
+                                  puts "Connection state has changed to #{context.state}" 
+                                  
+                                  if context.state == :ready
+                                    puts "My index is #{context.index}"
+                                    puts "My protocol version is #{context.protocol_version}"
+                                    puts "Server protocol version is #{context.server_protocol_version}"
+                                    puts "Server is local" if context.is_local?
+                                  end
+                                  
+                               }
                                
   pa.connect
 
-  mainloop = GLib::MainLoop.new
-  mainloop.run  
+  GLib::Timeout.add(3000) do
+    puts "Disconnecting"
+    pa.disconnect
+  end
 
-Please notice that code is rather very early and can contain bugs.  
+  mainloop = GLib::MainLoop.new
+  mainloop.run
+
+Please notice that code is rather very young, not well-tested and can contain bugs.
 
 = Installation
 
-=== Ruby Versions
+=== Supported Ruby versions
 
 It was tested with ruby 1.8.7 (2010-06-23 patchlevel 299) [i686-linux] under Ubuntu 10.10. 
   
