@@ -1,0 +1,30 @@
+= Introduction
+
+This is a wrapper for PulseAudio[http://www.pulseaudio.org] for Ruby.
+
+Here's a quick code sample. Currently no docs. Currently nothing more than just connecting to PA server but this is rapidly evolving project.
+
+  require 'glib2'
+  require 'pulseaudio'
+
+  pa = PulseAudio::Context.new :mainloop => PulseAudio::MainLoop::GLib::Loop.new,
+                               :state_callback_proc => Proc.new{ |context, user_data| puts context.state.inspect }
+                               
+  pa.connect
+
+  mainloop = GLib::MainLoop.new
+  mainloop.run  
+
+Please notice that code is rather very early and can contain bugs.  
+
+= Installation
+
+=== Ruby Versions
+
+It was tested with ruby 1.8.7 (2010-06-23 patchlevel 299) [i686-linux] under Ubuntu 10.10. 
+  
+=== From the GitHub source
+
+The source code is available at http://github.com/saepia/pulseaudio-ffi-ruby.
+You can either clone the git repository or download a tarball or zip file.
+Once you have the source, you can unpack it and use from wherever you downloaded.
