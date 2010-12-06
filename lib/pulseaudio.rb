@@ -6,6 +6,8 @@ module PulseAudio
   LIB_GLIB = [ "libglib-2.0.so.0", "libglib-2.0.so", "libglib-2.0" ]
   VERSION = "0.0.1"
   
+  CHANNELS_MAX = 32 # taken from sample.h, has to be 32-bit unsigned integer
+  
   module MainLoop
     class Base
       def mainloop
@@ -48,8 +50,218 @@ module PulseAudio
     end  
   end
   
-  class Operation
+  module Errors
+    class OperationNotPerformedYetError < Exception
+    end
+  end
   
+  class Operation
+    extend FFI::Library
+    ffi_lib LIB_PA
+
+    enum :format, [ :u8,
+                    :alaw,
+                    :ulaw,
+                    :s16le,
+                    :s16be,
+                    :float32le,
+                    :float32be,
+                    :s32le,
+                    :s32be,
+                    :s24le,
+                    :s24be,
+                    :s24_32le,
+                    :s24_32be,
+                    :max,
+                    :invalid ]
+                    
+    enum :channel_position, [
+                    :position_invalid,
+                    :position_mono,
+                    :position_front_left,
+                    :position_front_right,
+                    :position_front_center,
+                    :position_rear_center,
+                    :position_rear_left,
+                    :position_rear_right,
+                    :position_lfe,
+                    :position_front_left_of_center,
+                    :position_front_right_of_center,
+                    :position_side_left,
+                    :position_side_right,
+                    :position_aux0,
+                    :position_aux1,
+                    :position_aux2,
+                    :position_aux3,
+                    :position_aux4,
+                    :position_aux5,
+                    :position_aux6,
+                    :position_aux7,
+                    :position_aux8,
+                    :position_aux9,
+                    :position_aux10,
+                    :position_aux11,
+                    :position_aux12,
+                    :position_aux13,
+                    :position_aux14,
+                    :position_aux15,
+                    :position_aux16,
+                    :position_aux17,
+                    :position_aux18,
+                    :position_aux19,
+                    :position_aux20,
+                    :position_aux21,
+                    :position_aux22,
+                    :position_aux23,
+                    :position_aux24,
+                    :position_aux25,
+                    :position_aux26,
+                    :position_aux27,
+                    :position_aux28,
+                    :position_aux29,
+                    :position_aux30,
+                    :position_aux31,
+                    :position_top_center,
+                    :position_top_front_left,
+                    :position_top_front_right,
+                    :position_top_front_center,
+                    :position_top_rear_left,
+                    :position_top_rear_right,
+                    :position_top_rear_center,
+                    :position_max ]    
+
+    class SampleSpecStruct < ::FFI::Struct
+      layout :format, :format,
+             :rate, :uint32,
+             :channels, :uint8
+    end
+    
+    class ChannelMapStruct < ::FFI::Struct
+      layout :channels, :uint8,
+             :map, [ :uint32, PulseAudio::CHANNELS_MAX ]
+#             :map, [ :channel_position, PulseAudio::CHANNELS_MAX ] FIXME TODO use enums instead of numbers
+    end
+
+    class ServerInfoStruct < ::FFI::Struct
+      layout :user_name, :string,
+             :host_name, :string,
+             :server_version, :string,
+             :server_name, :string,
+             :sample_spec, SampleSpecStruct, 
+             :default_sink_name, :string,
+             :default_source_name, :string,
+             :cookie, :uint32,
+             :channel_map, ChannelMapStruct
+    end
+
+
+    enum :operation_state, [ :running,
+                             :done,
+                             :cancelled ]
+
+    attr_reader :callback, :context, :pointer
+
+    def initialize(context, options = {})
+      @context = context
+      @user_data = options[:user_data]
+      @callback_proc = options[:callback_proc]
+      @pointer = nil
+    end
+
+    def state
+      raise ::PulseAudio::Errors::OperationNotPerformedYetError, "You must perform some action first on this PulseAudio::Operation object to check its state" unless @pointer
+      
+      pa_operation_get_state @pointer
+    end
+    
+    def cancel!
+      pa_operation_cancel @pointer
+      nil
+    end
+
+
+
+    def name=(name)
+      initialize_success_callback_handler
+      @pointer = pa_context_set_name @context.pointer, name, @success_callback_handler, nil
+    end
+    
+    def exit_daemon!
+      initialize_success_callback_handler
+      @pointer = pa_context_exit_daemon @context.pointer, @success_callback_handler, nil
+    end
+    
+    def server_info
+      initialize_server_info_callback_handler
+      pa_context_get_server_info @context.pointer, @server_info_callback_handler, nil
+    end
+    
+
+    def default_sink
+      # TODO
+    end
+
+    def default_sink=(sink)
+      # TODO
+    end
+
+    def default_source
+      # TODO
+    end
+
+    def default_source=(source)
+      # TODO
+    end
+    
+    
+    
+
+    protected
+      def initialize_server_info_callback_handler
+        unless @server_info_callback_handler
+          @server_info_callback_handler = Proc.new{ |context, server_info, user_data|
+            struct = ServerInfoStruct.new server_info
+            
+            info = { :user_name => struct[:user_name],
+                     :host_name => struct[:host_name],            
+                     :server_version => struct[:server_version],            
+                     :server_name => struct[:server_name],            
+                     :default_sink_name => struct[:default_sink_name],
+                     :default_source_name => struct[:default_source_name],
+                     :cookie => struct[:cookie],
+                     :sample_spec => { :format   => struct[:sample_spec][:format],
+                                       :rate     => struct[:sample_spec][:rate],
+                                       :channels => struct[:sample_spec][:channels] },
+                     :channel_map => { :channels => struct[:channel_map][:channels],
+                                       :map => struct[:channel_map][:map].to_a } # TODO use enums instead of numbers
+                   }
+            
+
+            @callback_proc.call self, info, @user_data if @callback_proc
+          }
+        end
+      end
+      
+      def initialize_success_callback_handler
+        unless @success_callback_handler
+          @success_callback_handler = Proc.new{ |context, success, user_data|
+            @callback_proc.call self, success == 1, @user_data if @callback_proc
+          }
+        end
+      end
+  
+      
+      callback :pa_context_success_cb_t, [ :pointer, :int, :pointer ], :void
+#      callback :pa_stat_info_cb_t, [ :pointer, StatInfoStruct, :pointer ], :void # FIXME
+      callback :pa_server_info_cb_t, [ :pointer, ServerInfoStruct, :pointer ], :void
+      
+      attach_function :pa_context_set_name, [ :pointer, :string, :pa_context_success_cb_t, :pointer ], :pointer
+      attach_function :pa_operation_get_state, [ :pointer ], :operation_state
+      attach_function :pa_operation_cancel, [ :pointer ], :void
+      attach_function :pa_context_exit_daemon, [ :pointer, :pa_context_success_cb_t, :pointer ], :pointer
+#      attach_function :pa_context_stat, [ :pointer, :pa_stat_info_cb_t, :pointer ], :pointer # FIXME
+      attach_function :pa_context_get_server_info, [ :pointer, :pa_server_info_cb_t, :pointer ], :pointer
+
   end
   
   class Context
@@ -84,6 +296,10 @@ module PulseAudio
 
       pa_context_set_state_callback @context, @state_callback_handler, nil
     end
+    
+    def pointer
+      @context
+    end
 
     def connect(options = {})
       pa_context_connect @context, options[:server], 0, nil     # FIXME hardcoded 0 and nil         
@@ -110,25 +326,10 @@ module PulseAudio
       pa_context_get_server @context
     end
     
-    def server_name=(name)
-      # TODO
+    def operation(options = nil)
+      ::PulseAudio::Operation.new self, options
     end
     
-    def default_sink
-      # TODO
-    end
-
-    def default_sink=(sink)
-      # TODO
-    end
-
-    def default_source
-      # TODO
-    end
-
-    def default_source=(source)
-      # TODO
-    end
     
     def server_protocol_version
       pa_context_get_server_protocol_version @context
@@ -142,124 +343,23 @@ module PulseAudio
       pa_context_is_pending(@context) != 0
     end
     
-    def exit_daemon
-      # TODO
-    end
-    
-    
     
     protected
-=begin    
-      pa_context* pa_context_new	(	pa_mainloop_api * 	mainloop,
-      const char * 	name 
-      )		
-      Instantiate a new connection context with an abstract mainloop API and an application name.
-
-      It is recommended to use pa_context_new_with_proplist() instead and specify some initial properties.
-=end
-      attach_function :pa_context_new, [ :pointer, :string ], :pointer
-      
-
-=begin    
-      int pa_context_connect	(	pa_context * 	c,
-      const char * 	server,
-      pa_context_flags_t 	flags,
-      const pa_spawn_api * 	api 
-      )		
-      Connect the context to the specified server.
-
-      If server is NULL, connect to the default server. This routine may but will not always return synchronously on error. Use pa_context_set_state_callback() to be notified when the connection is established. If flags doesn't have PA_CONTEXT_NOAUTOSPAWN set and no specific server is specified or accessible a new daemon is spawned. If api is non-NULL, the functions specified in the structure are used when forking a new child process.
-=end
-      attach_function :pa_context_connect, [ :pointer, :string, :int, :pointer ], :int  # FIXME int as third arg, should be structure
-
-=begin      
-      void pa_context_disconnect	(	pa_context * 	c )	
-      Terminate the context connection immediately.      
-=end
-      attach_function :pa_context_disconnect, [ :pointer ], :void
-
-
-=begin
-      void pa_context_set_state_callback	(	pa_context * 	c,
-      pa_context_notify_cb_t 	cb,
-      void * 	userdata 
-      )		
-      Set a callback function that is called whenever the context status changes.
-=end
-      callback :pa_context_notify_cb_t, [ :pointer, :pointer ], :void
-      attach_function :pa_context_set_state_callback, [ :pointer, :pa_context_notify_cb_t, :pointer ], :void
-
-
-
-=begin
-      uint32_t pa_context_get_index	(	pa_context * 	s )	
-      Return the client index this context is identified in the server with.
-
-      This is useful for usage with the introspection functions, such as pa_context_get_client_info().
-=end
-      attach_function :pa_context_get_index, [ :pointer ], :uint32
-      
-      
-=begin
-      uint32_t pa_context_get_protocol_version	(	pa_context * 	c )	
-      Return the protocol version of the library.
-=end      
-      attach_function :pa_context_get_protocol_version, [ :pointer ], :uint32
-      
-=begin
-      const char* pa_context_get_server	(	pa_context * 	c )	
-      Return the server name this context is connected to.
-=end      
-      attach_function :pa_context_get_server, [ :pointer ], :string
-      
-=begin
-      uint32_t pa_context_get_server_protocol_version	(	pa_context * 	c )	
-      Return the protocol version of the connected server.      
-=end
-      attach_function :pa_context_get_server_protocol_version, [ :pointer ], :uint32
-
-=begin      
-      pa_context_state_t pa_context_get_state	(	pa_context * 	c )	
-      Return the current context status.      
-=end
-      attach_function :pa_context_get_state, [ :pointer ], :context_state
-
-=begin
-      int pa_context_is_local	(	pa_context * 	c )	
-      Returns 1 when the connection is to a local daemon.
-
-      Returns negative when no connection has been made yet.
-=end
-      attach_function :pa_context_is_local, [ :pointer ], :int
-
-
-=begin
-      int pa_context_is_pending	(	pa_context * 	c )	
-      Return non-zero if some data is pending to be written to the connection.
-=end
-      attach_function :pa_context_is_pending, [ :pointer ], :int
-
-=begin
-      pa_operation* pa_context_set_name	(	pa_context * 	c,
-      const char * 	name,
-      pa_context_success_cb_t 	cb,
-      void * 	userdata 
-      )		
-      Set a different application name for context on the server.
-=end
+      # FIXME DRY - move callbacks to module
       callback :pa_context_success_cb_t, [ :pointer, :int, :pointer ], :void
-      attach_function :pa_context_set_name, [ :pointer, :string, :pa_context_success_cb_t, :pointer ], :pointer
-      
-=begin
-      pa_operation* pa_context_exit_daemon	(	pa_context * 	c,
-      pa_context_success_cb_t 	cb,
-      void * 	userdata 
-      )		
-      Tell the daemon to exit.
+      callback :pa_context_notify_cb_t, [ :pointer, :pointer ], :void
 
-      The returned operation is unlikely to complete succesfully, since the daemon probably died before returning a success notification
-=end      
-      attach_function :pa_context_exit_daemon, [ :pointer, :pa_context_success_cb_t, :pointer ], :pointer
+      attach_function :pa_context_new, [ :pointer, :string ], :pointer
+      attach_function :pa_context_connect, [ :pointer, :string, :int, :pointer ], :int  # FIXME int as third arg, should be structure
+      attach_function :pa_context_disconnect, [ :pointer ], :void
+      attach_function :pa_context_set_state_callback, [ :pointer, :pa_context_notify_cb_t, :pointer ], :void
+      attach_function :pa_context_get_index, [ :pointer ], :uint32
+      attach_function :pa_context_get_protocol_version, [ :pointer ], :uint32
+      attach_function :pa_context_get_server, [ :pointer ], :string
+      attach_function :pa_context_get_server_protocol_version, [ :pointer ], :uint32
+      attach_function :pa_context_get_state, [ :pointer ], :context_state
+      attach_function :pa_context_is_local, [ :pointer ], :int
+      attach_function :pa_context_is_pending, [ :pointer ], :int
   end
 end
 
