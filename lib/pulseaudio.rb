@@ -61,6 +61,18 @@ module PulseAudio
       end
     end
     
+    class Sink
+      # TODO
+    end
+    
+    class Source
+      # TODO
+    end
+    
+    class Client
+      # TODO
+    end
+    
     class Operation
       extend FFI::Library
       ffi_lib LIB_PA
@@ -144,8 +156,8 @@ module PulseAudio
       
       class ChannelMapStruct < ::FFI::Struct
         layout :channels, :uint8,
-               :map, [ :uint32, ::PulseAudio::CHANNELS_MAX ]
-  #             :map, [ :channel_position, PulseAudio::CHANNELS_MAX ] FIXME TODO use enums instead of numbers
+               :map, [ :int, ::PulseAudio::CHANNELS_MAX ]
+  #             :map, [ :channel_position, PulseAudio::CHANNELS_MAX ] FIXME TODO use enums instead of numbers, FFI currently does not support that
       end
 
       class ServerInfoStruct < ::FFI::Struct
