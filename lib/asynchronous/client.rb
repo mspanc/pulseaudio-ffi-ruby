@@ -1,9 +1,12 @@
 module PulseAudio
   module Asynchronous
     class Client
+      extend FFI::Library
+      ffi_lib LIB_PA
+
       attr_reader :index, :name, :owner_module, :driver, :proplist, :operation
       
-      def initialize(operation, constructor)
+      def initialize(operation, constructor) # :nodoc:
         @operation = operation
         
         if constructor.is_a? FFI::Pointer
@@ -16,9 +19,26 @@ module PulseAudio
         end
       end
       
+      # Checks if this particular object represents the same client that was used to query one.
+      # In other words, it says if this object is your application.
       def me?
         @operation.context.index == @index
       end
+      
+      # Kills this client or disconnects the context if it is invoked on myself.
+      def kill!
+        # FIXME TODO add .operation syntax for asynchronous operation like killing clients
+
+        if me?
+          @operation.context.disconnect
+        else
+#          pa_context_kill_client @operation.context.pointer, @index, @kill_client_callback_handler, nil
+        end
+      end
+      
+      protected
+        include Common::Callbacks
+        attach_function :pa_context_kill_client, [ :pointer, :uint32, :pa_context_success_cb_t, :pointer ], :pointer
     end  
     
     
@@ -26,27 +46,36 @@ module PulseAudio
     class Clients      
       extend FFI::Library
       ffi_lib LIB_PA
+
+      include Common::QueryFunctions
+
       
       attr_reader :operation
       
-      def initialize(operation)
+      def initialize(operation) # :nodoc:
         @operation = operation
       end
-            
-      def all
+      
+      # Get list of all clients connected to the PulseAudio server
+      def all(&b)
+        @block = b
+        
         initialize_client_info_list_callback_handler
         pa_context_get_client_info_list @operation.context.pointer, @client_info_list_callback_handler, nil
       end
-      
-      def [](x)
-        case x
+
+      # Get particular client connected to the PulseAudio server identified by its index or name.
+      def find(seek, &b)
+        @block = b
+
+        case seek
           when Fixnum
             initialize_client_info_callback_handler
-            pa_context_get_client_info @operation.context.pointer, x, @client_info_callback_handler, nil
+            pa_context_get_client_info @operation.context.pointer, seek, @client_info_callback_handler, nil
           
           when String
             initialize_client_info_list_name_seek_callback_handler
-            @name_seek = x
+            @name_seek = seek
             pa_context_get_client_info_list @operation.context.pointer, @client_info_list_name_seek_callback_handler, nil
             
           else
@@ -55,15 +84,11 @@ module PulseAudio
       end
 
       protected
-        def initialize_list
-          @list = []
-        end
-
         def initialize_client_info_callback_handler
           unless @client_info_callback_handler
             @client_info_callback_handler = Proc.new{ |context, client_info, eol, user_data| 
               client = client_info.null? ? nil : ::PulseAudio::Asynchronous::Client.new(@operation, client_info)
-              @operation.callback_proc.call(@operation, client, @operation.user_data) if @operation.callback_proc unless eol == 1
+              callback.call(@operation, client, @operation.user_data) if callback unless eol == 1
             }
           end
         end      
@@ -76,7 +101,7 @@ module PulseAudio
               if eol != 1
                 @list << ::PulseAudio::Asynchronous::Client.new(@operation, client_info)
               else
-                @operation.callback_proc.call @operation, @list, @operation.user_data if @operation.callback_proc 
+                callback.call @operation, @list, @operation.user_data if callback
               end
             }
           end
@@ -89,12 +114,11 @@ module PulseAudio
               if eol != 1
                 @list << ::PulseAudio::Asynchronous::Client.new(@operation, client_info)
               else
-                @operation.callback_proc.call @operation, @list.detect{|client| client.name == @name_seek }, @operation.user_data if @operation.callback_proc 
+                callback.call @operation, @list.detect{|client| client.name == @name_seek }, @operation.user_data if callback
               end
             }
           end
         end      
-
 
         callback :pa_client_info_cb_t, [ :pointer, ::PulseAudio::Asynchronous::Types::Structures::ClientInfo, :int, :pointer ], :void
 

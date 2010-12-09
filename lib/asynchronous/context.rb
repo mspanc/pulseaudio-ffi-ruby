@@ -4,27 +4,17 @@ module PulseAudio
       extend FFI::Library
       ffi_lib LIB_PA
       
-      enum :context_state, [ :unconnected,
-                             :connecting,
-                             :authorizing,
-                             :setting_name,
-                             :ready,
-                             :failed,
-                             :terminated ]
+
 
       def initialize(options = {})
-      
-# TODO     
-#        raise ArgumentError, "options[:mainloop] must be an object of class derived from PulseAudio::MainLoop::Base but you have passed #{options[:mainloop].class}" unless options[:mainloop].is_a? ::PulseAudio::Asynchronous::MainLoop::Base
-
         options[:name] ||= File.basename($0)
         
         @mainloop = case options[:mainloop]
           when :glib
-            PulseAudio::Asynchronous::MainLoop::GLib::Loop.new
+            MainLoop::GLib::Loop.new
           
           else
-            raise RuntimeError, "TODO: Currently only implemented MainLoop is GLib"
+            raise RuntimeError, "TODO: Currently only implemented MainLoop is GLib, please pass :glib to :mainloop option"
         end
 
         @context = pa_context_new @mainloop.api, options[:name]
@@ -73,7 +63,8 @@ module PulseAudio
       end
       
       def operation(options = nil)
-        ::PulseAudio::Asynchronous::Operation.new self, options
+        # FIXME TODO change name to ContextOperation to distinguish from ClientOperation etc.
+        Operation.new self, options
       end
       
       
@@ -91,8 +82,7 @@ module PulseAudio
       
       
       protected
-        # FIXME DRY - move callbacks to module
-        callback :pa_context_success_cb_t, [ :pointer, :int, :pointer ], :void
+        include Common::Callbacks
         callback :pa_context_notify_cb_t, [ :pointer, :pointer ], :void
 
         attach_function :pa_context_new, [ :pointer, :string ], :pointer
@@ -103,7 +93,7 @@ module PulseAudio
         attach_function :pa_context_get_protocol_version, [ :pointer ], :uint32
         attach_function :pa_context_get_server, [ :pointer ], :string
         attach_function :pa_context_get_server_protocol_version, [ :pointer ], :uint32
-        attach_function :pa_context_get_state, [ :pointer ], :context_state
+        attach_function :pa_context_get_state, [ :pointer ], Types::Enums::ContextState
         attach_function :pa_context_is_local, [ :pointer ], :int
         attach_function :pa_context_is_pending, [ :pointer ], :int
     end
