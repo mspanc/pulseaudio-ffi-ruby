@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>find (PulseAudio::Asynchronous::Clients)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/asynchronous/client.rb, line 68</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">find</span>(<span class="ruby-identifier">seek</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">b</span>)
+        <span class="ruby-ivar">@block</span> = <span class="ruby-identifier">b</span>
+
+        <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">seek</span>
+          <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Fixnum</span>
+            <span class="ruby-identifier">initialize_client_info_callback_handler</span>
+            <span class="ruby-identifier">pa_context_get_client_info</span> <span class="ruby-ivar">@operation</span>.<span class="ruby-identifier">context</span>.<span class="ruby-identifier">pointer</span>, <span class="ruby-identifier">seek</span>, <span class="ruby-ivar">@client_info_callback_handler</span>, <span class="ruby-keyword kw">nil</span>
+          
+          <span class="ruby-keyword kw">when</span> <span class="ruby-constant">String</span>
+            <span class="ruby-identifier">initialize_client_info_list_name_seek_callback_handler</span>
+            <span class="ruby-ivar">@name_seek</span> = <span class="ruby-identifier">seek</span>
+            <span class="ruby-identifier">pa_context_get_client_info_list</span> <span class="ruby-ivar">@operation</span>.<span class="ruby-identifier">context</span>.<span class="ruby-identifier">pointer</span>, <span class="ruby-ivar">@client_info_list_name_seek_callback_handler</span>, <span class="ruby-keyword kw">nil</span>
+            
+          <span class="ruby-keyword kw">else</span>
+            <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-value str">&quot;Argument passed to PulseAudio::Asynchronous::Clients::[] has to be Fixnum or String&quot;</span>
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

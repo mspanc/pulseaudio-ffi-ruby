@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Class: PulseAudio::Asynchronous::Context</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Class</strong></td>
+          <td class="class-name-in-header">PulseAudio::Asynchronous::Context</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../../../files/lib/asynchronous/context_rb.html">
+                lib/asynchronous/context.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        <tr class="top-aligned-row">
+            <td><strong>Parent:</strong></td>
+            <td>
+                Object
+            </td>
+        </tr>
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+
+
+   </div>
+
+    <div id="method-list">
+      <h3 class="section-bar">Methods</h3>
+
+      <div class="name-list">
+      <a href="#M000003">connect</a>&nbsp;&nbsp;
+      <a href="#M000004">disconnect</a>&nbsp;&nbsp;
+      <a href="#M000006">index</a>&nbsp;&nbsp;
+      <a href="#M000011">is_local?</a>&nbsp;&nbsp;
+      <a href="#M000012">is_pending?</a>&nbsp;&nbsp;
+      <a href="#M000001">new</a>&nbsp;&nbsp;
+      <a href="#M000009">operation</a>&nbsp;&nbsp;
+      <a href="#M000002">pointer</a>&nbsp;&nbsp;
+      <a href="#M000007">protocol_version</a>&nbsp;&nbsp;
+      <a href="#M000008">server_name</a>&nbsp;&nbsp;
+      <a href="#M000010">server_protocol_version</a>&nbsp;&nbsp;
+      <a href="#M000005">state</a>&nbsp;&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+
+    <!-- if includes -->
+    <div id="includes">
+      <h3 class="section-bar">Included Modules</h3>
+
+      <div id="includes-list">
+        <span class="include-name">Common::Callbacks</span>
+      </div>
+    </div>
+
+    <div id="section">
+
+
+
+
+
+      
+
+
+    <!-- if method_list -->
+    <div id="methods">
+      <h3 class="section-bar">Public Class methods</h3>
+
+      <div id="method-M000001" class="method-detail">
+        <a name="M000001"></a>
+
+        <div class="method-heading">
+          <a href="Context.src/M000001.html" target="Code" class="method-signature"
+            onclick="popupCode('Context.src/M000001.html');return false;">
+          <span class="method-name">new</span><span class="method-args">(options = {})</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Initializes <a href="Context.html#M000001">new</a> context (object that
+represents particular connection to the <a
+href="../../PulseAudio.html">PulseAudio</a> server).
+</p>
+<ul>
+<li>options - Hash containing some initial parameters, valid keys are:
+
+<ul>
+<li>:mainloop (optional) - currently can contain only value of :glib because
+currently it&#8216;s only supported mainloop, if not provided, it will be
+substituted ith :glib,
+
+</li>
+<li>:state_callback_proc (optional, but highly recommended) - has to contain
+Proc object with two arguments (context, user_data) that will be called on
+connection&#8216;s <a href="Context.html#M000005">state</a> changes,
+
+</li>
+<li>:state_callback_user_data (optional) - data that will be passed as second
+argument to Proc defined as :state_callback_proc&#8216;s value
+
+</li>
+<li>:name (optional) - application name passed to <a
+href="../../PulseAudio.html">PulseAudio</a>, if not provided, it will be
+substituted with result of File.basename($0)
+
+</li>
+</ul>
+</li>
+</ul>
+        </div>
+      </div>
+
+      <h3 class="section-bar">Public Instance methods</h3>
+
+      <div id="method-M000003" class="method-detail">
+        <a name="M000003"></a>
+
+        <div class="method-heading">
+          <a href="Context.src/M000003.html" target="Code" class="method-signature"
+            onclick="popupCode('Context.src/M000003.html');return false;">
+          <span class="method-name">connect</span><span class="method-args">(options = {})</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Connects to the server.
+</p>
+<ul>
+<li>options - Hash containing connection parameters, valid keys are:
+
+<ul>
+<li>:name (optional) - name of the <a
+href="../../PulseAudio.html">PulseAudio</a> server (useful if
+there&#8216;re running more than one),
+
+</li>
+</ul>
+</li>
+</ul>
+        </div>
+      </div>
+
+      <div id="method-M000004" class="method-detail">
+        <a name="M000004"></a>
+
+        <div class="method-heading">
+          <a href="Context.src/M000004.html" target="Code" class="method-signature"
+            onclick="popupCode('Context.src/M000004.html');return false;">
+          <span class="method-name">disconnect</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Disconnects immediately from the server.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000006" class="method-detail">
+        <a name="M000006"></a>
+
+        <div class="method-heading">
+          <a href="Context.src/M000006.html" target="Code" class="method-signature"
+            onclick="popupCode('Context.src/M000006.html');return false;">
+          <span class="method-name">index</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+        </div>
+      </div>
+
+      <div id="method-M000011" class="method-detail">
+        <a name="M000011"></a>
+
+        <div class="method-heading">
+          <a href="Context.src/M000011.html" target="Code" class="method-signature"
+            onclick="popupCode('Context.src/M000011.html');return false;">
+          <span class="method-name">is_local?</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Returns true if connected server is local (on the same machine, not over
+the network).
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000012" class="method-detail">
+        <a name="M000012"></a>
+
+        <div class="method-heading">
+          <a href="Context.src/M000012.html" target="Code" class="method-signature"
+            onclick="popupCode('Context.src/M000012.html');return false;">
+          <span class="method-name">is_pending?</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+        </div>
+      </div>
+
+      <div id="method-M000009" class="method-detail">
+        <a name="M000009"></a>
+
+        <div class="method-heading">
+          <a href="Context.src/M000009.html" target="Code" class="method-signature"
+            onclick="popupCode('Context.src/M000009.html');return false;">
+          <span class="method-name">operation</span><span class="method-args">(options = nil)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+        </div>
+      </div>
+
+      <div id="method-M000002" class="method-detail">
+        <a name="M000002"></a>
+
+        <div class="method-heading">
+          <a href="Context.src/M000002.html" target="Code" class="method-signature"
+            onclick="popupCode('Context.src/M000002.html');return false;">
+          <span class="method-name">pointer</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+        </div>
+      </div>
+
+      <div id="method-M000007" class="method-detail">
+        <a name="M000007"></a>
+
+        <div class="method-heading">
+          <a href="Context.src/M000007.html" target="Code" class="method-signature"
+            onclick="popupCode('Context.src/M000007.html');return false;">
+          <span class="method-name">protocol_version</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Returns protocol version supported by the client.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000008" class="method-detail">
+        <a name="M000008"></a>
+
+        <div class="method-heading">
+          <a href="Context.src/M000008.html" target="Code" class="method-signature"
+            onclick="popupCode('Context.src/M000008.html');return false;">
+          <span class="method-name">server_name</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+        </div>
+      </div>
+
+      <div id="method-M000010" class="method-detail">
+        <a name="M000010"></a>
+
+        <div class="method-heading">
+          <a href="Context.src/M000010.html" target="Code" class="method-signature"
+            onclick="popupCode('Context.src/M000010.html');return false;">
+          <span class="method-name">server_protocol_version</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Returns protocol version supported by the server.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000005" class="method-detail">
+        <a name="M000005"></a>
+
+        <div class="method-heading">
+          <a href="Context.src/M000005.html" target="Code" class="method-signature"
+            onclick="popupCode('Context.src/M000005.html');return false;">
+          <span class="method-name">state</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Returns current connection <a href="Context.html#M000005">state</a>. Valid
+states are :unconnected, :connecting, :authorizing, :setting_name, :ready,
+:failed, :terminated.
+</p>
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>
