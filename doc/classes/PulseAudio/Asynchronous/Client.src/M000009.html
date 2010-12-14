@@ -5,20 +5,14 @@
 
 <html>
 <head>
-  <title>kill! (PulseAudio::Asynchronous::Client)</title>
+  <title>operation (PulseAudio::Asynchronous::Client)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/asynchronous/client.rb, line 29</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">kill!</span>
-        <span class="ruby-comment cmt"># FIXME TODO add .operation syntax for asynchronous operation like killing clients</span>
-
-        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">me?</span>
-          <span class="ruby-ivar">@operation</span>.<span class="ruby-identifier">context</span>.<span class="ruby-identifier">disconnect</span>
-        <span class="ruby-keyword kw">else</span>
-<span class="ruby-comment cmt">#          pa_context_kill_client @operation.context.pointer, @index, @kill_client_callback_handler, nil</span>
-        <span class="ruby-keyword kw">end</span>
+  <pre><span class="ruby-comment cmt"># File lib/asynchronous/client.rb, line 28</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">operation</span>(<span class="ruby-identifier">options</span> = <span class="ruby-keyword kw">nil</span>)
+        <span class="ruby-constant">Operation</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">options</span>
       <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

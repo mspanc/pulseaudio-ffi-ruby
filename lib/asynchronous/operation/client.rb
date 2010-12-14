@@ -7,6 +7,7 @@ module PulseAudio
 
         include Common::Callbacks
 
+        # Kills the client.
         def kill!(&b)
           @block = b
           initialize_success_callback_handler

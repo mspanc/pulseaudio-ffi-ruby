@@ -11,6 +11,11 @@ module PulseAudio
                  
         end
         
+        class CVolume < ::FFI::Struct
+          layout :channels, :uint8,
+                 :values, [ Typedefs::Volume_t, ::PulseAudio::CHANNELS_MAX ]
+        end
+
         class SampleSpec < ::FFI::Struct
           layout :format, Enums::Format,
                  :rate, :uint32,
@@ -21,7 +26,43 @@ module PulseAudio
           layout :channels, :uint8,
                  :map, [ :int, ::PulseAudio::CHANNELS_MAX ]
     #             :map, [ :channel_position, PulseAudio::CHANNELS_MAX ] FIXME TODO use enums instead of numbers, FFI currently does not support that
+        end        
+        
+        class SinkPortInfo < ::FFI::Struct
+          layout :name, :string,
+                 :description, :string,
+                 :priority, :uint32
         end
+                
+        class SinkInfo < ::FFI::Struct
+          layout :name, :string,
+                 :index, :uint32,
+                 :description, :string,
+                 :sample_spec, SampleSpec,
+                 :channel_map, ChannelMap,
+                 :owner_module, :uint32,
+                 :volume, CVolume,
+                 :mute, :int,
+                 :monitor_source, :uint32,
+                 :monitor_source_name, :string,
+                 :latency, Typedefs::Usec_t,
+                 :driver, :string,
+                 :flags, Enums::SinkFlags,
+                 :proplist, :pointer, # FIXME pa_proplist
+                 :configured_latency, Typedefs::Usec_t,
+                 :base_volume, Typedefs::Volume_t,
+                 :state, Enums::SinkState,
+                 :n_volume_steps, :uint32,
+                 :card, :uint32,
+                 :n_ports, :uint32,
+                 :ports, :pointer, # FIXME array of SinkPortInfo
+                 :active_port, SinkPortInfo
+                 
+        end
+                
+
+        
+
 
 
         class ServerInfo < ::FFI::Struct

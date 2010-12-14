@@ -90,6 +90,21 @@ module PulseAudio
         OperationState = enum [ :running,
                                 :done,
                                 :cancelled ]
+                                
+        SinkFlags = enum [ :noflags,
+                           :hw_volume_ctrl,
+                           :latency,
+                           :hardware,
+                           :network,
+                           :hw_mute_ctrl,
+                           :decibel_volume,
+                           :flat_volume,
+                           :dynamic_latency ]
+                           
+        SinkState = enum [ :invalid,
+                           :running,
+                           :idle,
+                           :suspended ]
       end
     end
   end

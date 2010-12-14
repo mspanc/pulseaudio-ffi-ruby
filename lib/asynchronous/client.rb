@@ -53,7 +53,7 @@ module PulseAudio
       
       # Get list of all clients connected to the PulseAudio server.
       #
-      # Block passed to the function will be yielded when asynchronous query operation finishes.
+      # Block passed to the function will be called when asynchronous query operation finishes.
       # Parameters passed to the block are:
       #
       # +operation+ is an Operation object used to perform the query.
@@ -75,7 +75,7 @@ module PulseAudio
       # Seeking via name internally calls function similar to all, so please note that it can be less 
       # efficient than seeking by ID.
       #
-      # Block passed to the function will be yielded when asynchronous query operation finishes.
+      # Block passed to the function will be called when asynchronous query operation finishes.
       # Parameters passed to the block are:
       #
       # +operation+ is an Operation object used to perform the query.

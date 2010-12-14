@@ -5,7 +5,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-  <title>Class: PulseAudio::Asynchronous::Client</title>
+  <title>Class: PulseAudio::Asynchronous::Sink</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <meta http-equiv="Content-Script-Type" content="text/javascript" />
   <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
@@ -50,17 +50,17 @@
         <table class="header-table">
         <tr class="top-aligned-row">
           <td><strong>Class</strong></td>
-          <td class="class-name-in-header">PulseAudio::Asynchronous::Client</td>
+          <td class="class-name-in-header">PulseAudio::Asynchronous::Sink</td>
         </tr>
         <tr class="top-aligned-row">
             <td><strong>In:</strong></td>
             <td>
-                <a href="../../../files/lib/asynchronous/client_rb.html">
-                lib/asynchronous/client.rb
+                <a href="../../../files/lib/asynchronous/operation/sink_rb.html">
+                lib/asynchronous/operation/sink.rb
                 </a>
         <br />
-                <a href="../../../files/lib/asynchronous/operation/client_rb.html">
-                lib/asynchronous/operation/client.rb
+                <a href="../../../files/lib/asynchronous/sink_rb.html">
+                lib/asynchronous/sink.rb
                 </a>
         <br />
             </td>
@@ -90,7 +90,7 @@
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000009">operation</a>&nbsp;&nbsp;
+      <a href="#M000030">operation</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -104,7 +104,7 @@
     <div id="class-list">
       <h3 class="section-bar">Classes and Modules</h3>
 
-      Class <a href="Client/Operation.html" class="link">PulseAudio::Asynchronous::Client::Operation</a><br />
+      Class <a href="Sink/Operation.html" class="link">PulseAudio::Asynchronous::Sink::Operation</a><br />
 
     </div>
 
@@ -141,16 +141,6 @@
           <td class="context-item-value">&nbsp;[R]&nbsp;</td>
           <td class="context-item-desc"></td>
         </tr>
-        <tr class="top-aligned-row context-row">
-          <td class="context-item-name">owner_module</td>
-          <td class="context-item-value">&nbsp;[R]&nbsp;</td>
-          <td class="context-item-desc"></td>
-        </tr>
-        <tr class="top-aligned-row context-row">
-          <td class="context-item-name">proplist</td>
-          <td class="context-item-value">&nbsp;[R]&nbsp;</td>
-          <td class="context-item-desc"></td>
-        </tr>
         </table>
       </div>
     </div>
@@ -161,22 +151,22 @@
     <div id="methods">
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000009" class="method-detail">
-        <a name="M000009"></a>
+      <div id="method-M000030" class="method-detail">
+        <a name="M000030"></a>
 
         <div class="method-heading">
-          <a href="Client.src/M000009.html" target="Code" class="method-signature"
-            onclick="popupCode('Client.src/M000009.html');return false;">
+          <a href="Sink.src/M000030.html" target="Code" class="method-signature"
+            onclick="popupCode('Sink.src/M000030.html');return false;">
           <span class="method-name">operation</span><span class="method-args">(options = nil)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Return a new <a href="Client/Operation.html">Client::Operation</a> object.
+Return a new <a href="Sink/Operation.html">Sink::Operation</a> object.
 </p>
 <p>
-You can use returned object to perform asynchronous tasks on this client.
+You can use returned object to perform asynchronous tasks on this sink.
 </p>
 <p>
 Please read the <a

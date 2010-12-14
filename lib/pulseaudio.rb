@@ -8,6 +8,7 @@ module PulseAudio
   
   CHANNELS_MAX = 32 # taken from sample.h, has to be 32-bit unsigned integer
 
+  
   module Asynchronous  
     module Common # :nodoc:
       module Callbacks # :nodoc:
@@ -50,6 +51,7 @@ end
 load_dir = File.dirname(File.expand_path(__FILE__))
 
 require File.join(load_dir, 'asynchronous/errors')
+require File.join(load_dir, 'asynchronous/types/typedefs')
 require File.join(load_dir, 'asynchronous/types/enums')
 require File.join(load_dir, 'asynchronous/types/structures')
 require File.join(load_dir, 'asynchronous/mainloop/glib')
@@ -60,4 +62,7 @@ require File.join(load_dir, 'asynchronous/operation/context')
 
 require File.join(load_dir, 'asynchronous/client')
 require File.join(load_dir, 'asynchronous/operation/client')
+
+require File.join(load_dir, 'asynchronous/sink')
+require File.join(load_dir, 'asynchronous/operation/sink')
 

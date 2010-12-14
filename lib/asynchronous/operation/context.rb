@@ -37,6 +37,11 @@ module PulseAudio
           Clients.new self
         end
         
+        # Returns PulseAudio::Asynchronous::Sinks object, which can be used to query information
+        # about available sinks.
+        def sinks
+          Sinks.new self
+        end
         
 
         protected

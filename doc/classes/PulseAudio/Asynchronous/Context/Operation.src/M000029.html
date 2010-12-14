@@ -5,18 +5,14 @@
 
 <html>
 <head>
-  <title>initialize_success_callback_handler (PulseAudio::Asynchronous::Context::Operation)</title>
+  <title>sinks (PulseAudio::Asynchronous::Context::Operation)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../../../../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/asynchronous/operation/context.rb, line 62</span>
-          <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize_success_callback_handler</span>
-            <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@success_callback_handler</span>
-              <span class="ruby-ivar">@success_callback_handler</span> = <span class="ruby-constant">Proc</span>.<span class="ruby-identifier">new</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">context</span>, <span class="ruby-identifier">success</span>, <span class="ruby-identifier">user_data</span><span class="ruby-operator">|</span>
-                <span class="ruby-ivar">@callback_proc</span>.<span class="ruby-identifier">call</span> <span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">success</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>, <span class="ruby-ivar">@user_data</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@callback_proc</span>
-              }
-            <span class="ruby-keyword kw">end</span>
-          <span class="ruby-keyword kw">end</span></pre>
+  <pre><span class="ruby-comment cmt"># File lib/asynchronous/operation/context.rb, line 42</span>
+        <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">sinks</span>
+          <span class="ruby-constant">Sinks</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword kw">self</span>
+        <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>
