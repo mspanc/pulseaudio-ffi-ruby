@@ -2,23 +2,25 @@
 
 This is a wrapper to PulseAudio[http://www.pulseaudio.org] for Ruby.
 
-Here comes a short code sample. Currently no docs. Currently it does nothing more than just connecting to PA server and reading some of it parameters, but please note that this is new and rapidly evolving project.
+Here comes a short code sample. Currently almost no docs. Currently it does only a bit more than just connecting to PA server and reading some of it parameters, but please note that this is new and rapidly evolving project.
 
   require 'glib2'
   require 'lib/pulseaudio'
 
-  pa = PulseAudio::Asynchronous::Context.new :mainloop => :glib,
-                                 :state_callback_proc => Proc.new{ |context, user_data| 
-                                    puts "Connection state has changed to #{context.state}" 
-                                    
-                                    if context.state == :ready
-                                      puts "My index is #{context.index}"
-                                      puts "My protocol version is #{context.protocol_version}"
-                                      puts "Server protocol version is #{context.server_protocol_version}"
-                                      puts "Server is local" if context.is_local?
-                                    end
-                                    
-                                 }
+  pa = PulseAudio::Asynchronous::Context.new 
+  pa.state_callback_proc = Proc.new{ |context, user_data|
+     puts "Connection state has changed to #{context.state}"
+      
+     if context.state == :ready
+       puts "I am connected, my index is #{context.index}"
+       
+       context.operation.clients.all do |operation, list, user_data|
+         puts "List of all clients connected to this PulseAudio server:"
+         
+         puts list.inspect
+       end
+     end
+  }
                                
   pa.connect
 
@@ -30,7 +32,7 @@ Here comes a short code sample. Currently no docs. Currently it does nothing mor
   mainloop = GLib::MainLoop.new
   mainloop.run
 
-Please notice that code is rather very young, not well-tested and can contain bugs.
+Please notice that code is very young, not well-tested and can contain bugs. API is not stable.
 
 = Installation
 

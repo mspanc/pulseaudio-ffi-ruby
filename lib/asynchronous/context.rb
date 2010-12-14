@@ -4,6 +4,8 @@ module PulseAudio
       extend FFI::Library
       ffi_lib LIB_PA
       
+      attr_accessor :state_callback_proc, :state_callback_user_data,
+                    :event_callback_proc, :event_callback_user_data
 
       # Initializes new context (object that represents particular connection to the PulseAudio server).
       # 
@@ -26,18 +28,17 @@ module PulseAudio
 
         @context = pa_context_new @mainloop.api, options[:name]
 
-
         # State callback management
         @state_callback_handler = Proc.new{|context, user_data| 
           @state_callback_proc.call(self, @state_callback_user_data) if @state_callback_proc
         }
-
-        if options[:state_callback_proc] and options[:state_callback_proc].is_a? Proc
-          @state_callback_proc = options[:state_callback_proc]
-          @state_callback_user_data = options[:state_callback_user_data]
-        end
-
         pa_context_set_state_callback @context, @state_callback_handler, nil
+
+        # Event callback management
+        @event_callback_handler = Proc.new{|context, user_data| 
+          @event_callback_proc.call(self, @event_callback_user_data) if @event_callback_proc
+        }
+        pa_context_set_event_callback @context, @event_callback_handler, nil
       end
       
       def pointer # :nodoc:
@@ -128,11 +129,13 @@ module PulseAudio
       protected
         include Common::Callbacks
         callback :pa_context_notify_cb_t, [ :pointer, :pointer ], :void
+        callback :pa_context_event_cb_t, [ :pointer, :string, :pointer, :pointer ], :void # FIXME pointer as 3rd arg -> Proplist Type
 
         attach_function :pa_context_new, [ :pointer, :string ], :pointer
         attach_function :pa_context_connect, [ :pointer, :string, :int, :pointer ], :int  # FIXME int as third arg, should be structure
         attach_function :pa_context_disconnect, [ :pointer ], :void
         attach_function :pa_context_set_state_callback, [ :pointer, :pa_context_notify_cb_t, :pointer ], :void
+        attach_function :pa_context_set_event_callback, [ :pointer, :pa_context_event_cb_t, :pointer ], :void
         attach_function :pa_context_get_index, [ :pointer ], :uint32
         attach_function :pa_context_get_protocol_version, [ :pointer ], :uint32
         attach_function :pa_context_get_server, [ :pointer ], :string

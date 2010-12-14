@@ -36,6 +36,10 @@ module PulseAudio
         end
       end
       
+      def inspect # :nodoc:
+        "#<#{self.class} ##{index} \"#{name}\">"
+      end
+      
       protected
         include Common::Callbacks
         attach_function :pa_context_kill_client, [ :pointer, :uint32, :pa_context_success_cb_t, :pointer ], :pointer

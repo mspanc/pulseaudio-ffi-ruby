@@ -48,7 +48,7 @@ module PulseAudio
           attach_function :pa_context_exit_daemon, [ :pointer, :pa_context_success_cb_t, :pointer ], :pointer
           attach_function :pa_context_get_server_info, [ :pointer, :pa_server_info_cb_t, :pointer ], :pointer
         
-          def initialize_server_info_callback_handler
+          def initialize_server_info_callback_handler # :nodoc:
             unless @server_info_callback_handler
               @server_info_callback_handler = Proc.new{ |context, server_info, user_data|
                 struct = Types::Structures::ServerInfo.new server_info
@@ -73,7 +73,7 @@ module PulseAudio
             end
           end
           
-          def initialize_success_callback_handler
+          def initialize_success_callback_handler # :nodoc:
             unless @success_callback_handler
               @success_callback_handler = Proc.new{ |context, success, user_data|
                 @callback_proc.call self, success == 1, @user_data if @callback_proc
