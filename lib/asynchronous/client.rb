@@ -56,8 +56,17 @@ module PulseAudio
         @operation = operation
       end
       
-      # Get list of all clients connected to the PulseAudio server
-      def all(&b)
+      # Get list of all clients connected to the PulseAudio server.
+      #
+      # Block passed to the function will be yielded when asynchronous query operation finishes.
+      # Parameters passed to the block are:
+      #
+      # +operation+ is an Operation object used to perform the query.
+      #
+      # +list+ is an array of PulseAudio::Asynchronous::Client objects found with the query.
+      #
+      # +user_data+ is an object passed to Operation object constructor or nil.
+      def all(&b) # :yields: operation, list, user_data
         @block = b
         
         initialize_client_info_list_callback_handler
@@ -65,7 +74,21 @@ module PulseAudio
       end
 
       # Get particular client connected to the PulseAudio server identified by its index or name.
-      def find(seek, &b)
+      #
+      # +seek+ is a Fixnum (if you seek by client's ID) or String (if you seek by client's name).
+      #
+      # Seeking via name internally calls function similar to all, so please note that it can be less 
+      # efficient than seeking by ID.
+      #
+      # Block passed to the function will be yielded when asynchronous query operation finishes.
+      # Parameters passed to the block are:
+      #
+      # +operation+ is an Operation object used to perform the query.
+      #
+      # +client+ is PulseAudio::Asynchronous::Client found with the query.
+      #
+      # +user_data+ is an object passed to Operation object constructor or nil.
+      def find(seek, &b) # :yields: operation, client, user_data
         @block = b
 
         case seek
@@ -84,7 +107,7 @@ module PulseAudio
       end
 
       protected
-        def initialize_client_info_callback_handler
+        def initialize_client_info_callback_handler # :nodoc:
           unless @client_info_callback_handler
             @client_info_callback_handler = Proc.new{ |context, client_info, eol, user_data| 
               client = client_info.null? ? nil : ::PulseAudio::Asynchronous::Client.new(@operation, client_info)
@@ -94,7 +117,7 @@ module PulseAudio
         end      
 
         
-        def initialize_client_info_list_callback_handler
+        def initialize_client_info_list_callback_handler # :nodoc:
           initialize_list
           unless @client_info_list_callback_handler
             @client_info_list_callback_handler = Proc.new{ |context, client_info, eol, user_data|
@@ -107,7 +130,7 @@ module PulseAudio
           end
         end      
 
-        def initialize_client_info_list_name_seek_callback_handler
+        def initialize_client_info_list_name_seek_callback_handler # :nodoc:
           initialize_list
           unless @client_info_list_name_seek_callback_handler
             @client_info_list_name_seek_callback_handler = Proc.new{ |context, client_info, eol, user_data|

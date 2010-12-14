@@ -86,8 +86,8 @@
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000001">all</a>&nbsp;&nbsp;
-      <a href="#M000002">find</a>&nbsp;&nbsp;
+      <a href="#M000007">all</a>&nbsp;&nbsp;
+      <a href="#M000008">find</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -129,31 +129,48 @@
     <div id="methods">
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000001" class="method-detail">
-        <a name="M000001"></a>
+      <div id="method-M000007" class="method-detail">
+        <a name="M000007"></a>
 
         <div class="method-heading">
-          <a href="Clients.src/M000001.html" target="Code" class="method-signature"
-            onclick="popupCode('Clients.src/M000001.html');return false;">
-          <span class="method-name">all</span><span class="method-args">(&amp;b)</span>
+          <a href="Clients.src/M000007.html" target="Code" class="method-signature"
+            onclick="popupCode('Clients.src/M000007.html');return false;">
+          <span class="method-name">all</span><span class="method-args">() {|operation, list, user_data| ...}</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Get list of <a href="Clients.html#M000001">all</a> clients connected to the
-<a href="../../PulseAudio.html">PulseAudio</a> server
+Get list of <a href="Clients.html#M000007">all</a> clients connected to the
+<a href="../../PulseAudio.html">PulseAudio</a> server.
+</p>
+<p>
+Block passed to the function will be yielded when asynchronous query
+operation finishes. Parameters passed to the block are:
+</p>
+<p>
+<tt>operation</tt> is an <a href="Operation.html">Operation</a> object used
+to perform the query.
+</p>
+<p>
+<tt>list</tt> is an array of <a
+href="Client.html">PulseAudio::Asynchronous::Client</a> objects found with
+the query.
+</p>
+<p>
+<tt>user_data</tt> is an object passed to <a
+href="Operation.html">Operation</a> object constructor or nil.
 </p>
         </div>
       </div>
 
-      <div id="method-M000002" class="method-detail">
-        <a name="M000002"></a>
+      <div id="method-M000008" class="method-detail">
+        <a name="M000008"></a>
 
         <div class="method-heading">
-          <a href="Clients.src/M000002.html" target="Code" class="method-signature"
-            onclick="popupCode('Clients.src/M000002.html');return false;">
-          <span class="method-name">find</span><span class="method-args">(seek, &amp;b)</span>
+          <a href="Clients.src/M000008.html" target="Code" class="method-signature"
+            onclick="popupCode('Clients.src/M000008.html');return false;">
+          <span class="method-name">find</span><span class="method-args">(seek) {|operation, client, user_data| ...}</span>
           </a>
         </div>
       
@@ -162,6 +179,32 @@ Get list of <a href="Clients.html#M000001">all</a> clients connected to the
 Get particular client connected to the <a
 href="../../PulseAudio.html">PulseAudio</a> server identified by its index
 or name.
+</p>
+<p>
+<tt>seek</tt> is a Fixnum (if you seek by client&#8216;s ID) or String (if
+you seek by client&#8216;s name).
+</p>
+<p>
+Seeking via name internally calls function similar to <a
+href="Clients.html#M000007">all</a>, so please note that it can be less
+efficient than seeking by ID.
+</p>
+<p>
+Block passed to the function will be yielded when asynchronous query
+operation finishes. Parameters passed to the block are:
+</p>
+<p>
+<tt>operation</tt> is an <a href="Operation.html">Operation</a> object used
+to perform the query.
+</p>
+<p>
+<tt>client</tt> is <a
+href="Client.html">PulseAudio::Asynchronous::Client</a> found with the
+query.
+</p>
+<p>
+<tt>user_data</tt> is an object passed to <a
+href="Operation.html">Operation</a> object constructor or nil.
 </p>
         </div>
       </div>

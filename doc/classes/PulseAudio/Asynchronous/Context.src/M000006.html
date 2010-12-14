@@ -5,14 +5,15 @@
 
 <html>
 <head>
-  <title>index (PulseAudio::Asynchronous::Context)</title>
+  <title>connect (PulseAudio::Asynchronous::Context)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/asynchronous/context.rb, line 66</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">index</span>
-        <span class="ruby-identifier">pa_context_get_index</span> <span class="ruby-ivar">@context</span>
+  <pre><span class="ruby-comment cmt"># File lib/asynchronous/context.rb, line 51</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">connect</span>(<span class="ruby-identifier">options</span> = {})
+        <span class="ruby-identifier">pa_context_connect</span> <span class="ruby-ivar">@context</span>, <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:server</span>], <span class="ruby-value">0</span>, <span class="ruby-keyword kw">nil</span>     <span class="ruby-comment cmt"># FIXME hardcoded 0 and nil         </span>
+        <span class="ruby-comment cmt"># TODO proplist support</span>
       <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

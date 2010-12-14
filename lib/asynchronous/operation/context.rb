@@ -1,0 +1,91 @@
+module PulseAudio
+  module Asynchronous
+    class Context
+      class Operation < ::PulseAudio::Asynchronous::Operation
+        extend FFI::Library
+        ffi_lib LIB_PA
+
+        # Sets a new name +name+ for client associated with this context in the PulseAudio server.
+        #
+        # TODO FIXME missing block!
+        def name=(name)
+          initialize_success_callback_handler
+          @pointer = pa_context_set_name @context.pointer, name, @success_callback_handler, nil
+        end
+        alias_method :set_name, :name=
+
+        # Tell the daemon to exit.
+        #
+        # The returned operation is unlikely to complete succesfully, since the daemon probably
+        # died before returning a success notification.
+        #
+        # TODO FIXME missing block!
+        def exit_daemon!
+          initialize_success_callback_handler
+          @pointer = pa_context_exit_daemon @context.pointer, @success_callback_handler, nil
+        end
+        
+        # TODO FIXME missing block!
+        def server_info
+          initialize_server_info_callback_handler
+          pa_context_get_server_info @context.pointer, @server_info_callback_handler, nil
+        end
+        
+        # Returns PulseAudio::Asynchronous::Clients object, which can be used to query information
+        # about clients connected to the server.
+        def clients
+          Clients.new self
+        end
+        
+        
+
+        protected
+          include Common::Callbacks
+
+          callback :pa_server_info_cb_t, [ :pointer, Types::Structures::ServerInfo, :pointer ], :void
+
+          attach_function :pa_context_set_name, [ :pointer, :string, :pa_context_success_cb_t, :pointer ], :pointer
+          attach_function :pa_context_exit_daemon, [ :pointer, :pa_context_success_cb_t, :pointer ], :pointer
+          attach_function :pa_context_get_server_info, [ :pointer, :pa_server_info_cb_t, :pointer ], :pointer
+        
+          def initialize_server_info_callback_handler
+            unless @server_info_callback_handler
+              @server_info_callback_handler = Proc.new{ |context, server_info, user_data|
+                struct = Types::Structures::ServerInfo.new server_info
+                
+                info = { :user_name => struct[:user_name],
+                         :host_name => struct[:host_name],            
+                         :server_version => struct[:server_version],            
+                         :server_name => struct[:server_name],            
+                         :default_sink_name => struct[:default_sink_name],
+                         :default_source_name => struct[:default_source_name],
+                         :cookie => struct[:cookie],
+                         :sample_spec => { :format   => struct[:sample_spec][:format],
+                                           :rate     => struct[:sample_spec][:rate],
+                                           :channels => struct[:sample_spec][:channels] },
+                         :channel_map => { :channels => struct[:channel_map][:channels],
+                                           :map => struct[:channel_map][:map].to_a } # TODO FIXME use enums instead of numbers, currently unsupported in FFI
+                       }
+                
+
+                @callback_proc.call self, info, @user_data if @callback_proc
+              }
+            end
+          end
+          
+          def initialize_success_callback_handler
+            unless @success_callback_handler
+              @success_callback_handler = Proc.new{ |context, success, user_data|
+                @callback_proc.call self, success == 1, @user_data if @callback_proc
+              }
+            end
+          end
+      
+          
+
+
+      end
+    end    
+  end
+end
+

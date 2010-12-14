@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>initialize_server_info_callback_handler (PulseAudio::Asynchronous::Context::Operation)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/asynchronous/operation/context.rb, line 54</span>
+          <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize_server_info_callback_handler</span>
+            <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@server_info_callback_handler</span>
+              <span class="ruby-ivar">@server_info_callback_handler</span> = <span class="ruby-constant">Proc</span>.<span class="ruby-identifier">new</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">context</span>, <span class="ruby-identifier">server_info</span>, <span class="ruby-identifier">user_data</span><span class="ruby-operator">|</span>
+                <span class="ruby-identifier">struct</span> = <span class="ruby-constant">Types</span><span class="ruby-operator">::</span><span class="ruby-constant">Structures</span><span class="ruby-operator">::</span><span class="ruby-constant">ServerInfo</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">server_info</span>
+                
+                <span class="ruby-identifier">info</span> = { <span class="ruby-identifier">:user_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">struct</span>[<span class="ruby-identifier">:user_name</span>],
+                         <span class="ruby-identifier">:host_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">struct</span>[<span class="ruby-identifier">:host_name</span>],            
+                         <span class="ruby-identifier">:server_version</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">struct</span>[<span class="ruby-identifier">:server_version</span>],            
+                         <span class="ruby-identifier">:server_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">struct</span>[<span class="ruby-identifier">:server_name</span>],            
+                         <span class="ruby-identifier">:default_sink_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">struct</span>[<span class="ruby-identifier">:default_sink_name</span>],
+                         <span class="ruby-identifier">:default_source_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">struct</span>[<span class="ruby-identifier">:default_source_name</span>],
+                         <span class="ruby-identifier">:cookie</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">struct</span>[<span class="ruby-identifier">:cookie</span>],
+                         <span class="ruby-identifier">:sample_spec</span> =<span class="ruby-operator">&gt;</span> { <span class="ruby-identifier">:format</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">struct</span>[<span class="ruby-identifier">:sample_spec</span>][<span class="ruby-identifier">:format</span>],
+                                           <span class="ruby-identifier">:rate</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">struct</span>[<span class="ruby-identifier">:sample_spec</span>][<span class="ruby-identifier">:rate</span>],
+                                           <span class="ruby-identifier">:channels</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">struct</span>[<span class="ruby-identifier">:sample_spec</span>][<span class="ruby-identifier">:channels</span>] },
+                         <span class="ruby-identifier">:channel_map</span> =<span class="ruby-operator">&gt;</span> { <span class="ruby-identifier">:channels</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">struct</span>[<span class="ruby-identifier">:channel_map</span>][<span class="ruby-identifier">:channels</span>],
+                                           <span class="ruby-identifier">:map</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">struct</span>[<span class="ruby-identifier">:channel_map</span>][<span class="ruby-identifier">:map</span>].<span class="ruby-identifier">to_a</span> } <span class="ruby-comment cmt"># TODO FIXME use enums instead of numbers, currently unsupported in FFI</span>
+                       }
+                
+
+                <span class="ruby-ivar">@callback_proc</span>.<span class="ruby-identifier">call</span> <span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">info</span>, <span class="ruby-ivar">@user_data</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@callback_proc</span>
+              }
+            <span class="ruby-keyword kw">end</span>
+          <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

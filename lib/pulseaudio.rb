@@ -40,7 +40,10 @@ require 'lib/asynchronous/errors'
 require 'lib/asynchronous/types/enums'
 require 'lib/asynchronous/types/structures'
 require 'lib/asynchronous/mainloop/glib'
-require 'lib/asynchronous/context'
 require 'lib/asynchronous/operation'
+
+require 'lib/asynchronous/context'
+require 'lib/asynchronous/operation/context'
+
 require 'lib/asynchronous/client'
 

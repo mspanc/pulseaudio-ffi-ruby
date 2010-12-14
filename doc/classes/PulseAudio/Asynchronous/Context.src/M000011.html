@@ -5,14 +5,38 @@
 
 <html>
 <head>
-  <title>is_local? (PulseAudio::Asynchronous::Context)</title>
+  <title>new (PulseAudio::Asynchronous::Context)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/asynchronous/context.rb, line 90</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">is_local?</span>
-        <span class="ruby-identifier">pa_context_is_local</span>(<span class="ruby-ivar">@context</span>) <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
+  <pre><span class="ruby-comment cmt"># File lib/asynchronous/context.rb, line 15</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">options</span> = {})
+        <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:name</span>] <span class="ruby-operator">||=</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">basename</span>(<span class="ruby-identifier">$0</span>)
+        <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:mainloop</span>] <span class="ruby-operator">||=</span> <span class="ruby-identifier">:glib</span>
+        
+        <span class="ruby-ivar">@mainloop</span> = <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:mainloop</span>]
+          <span class="ruby-keyword kw">when</span> <span class="ruby-identifier">:glib</span>
+            <span class="ruby-constant">MainLoop</span><span class="ruby-operator">::</span><span class="ruby-constant">GLib</span><span class="ruby-operator">::</span><span class="ruby-constant">Loop</span>.<span class="ruby-identifier">new</span>
+          
+          <span class="ruby-keyword kw">else</span>
+            <span class="ruby-identifier">raise</span> <span class="ruby-constant">RuntimeError</span>, <span class="ruby-value str">&quot;TODO: Currently only implemented MainLoop is GLib, please pass :glib to :mainloop option&quot;</span>
+        <span class="ruby-keyword kw">end</span>
+
+        <span class="ruby-ivar">@context</span> = <span class="ruby-identifier">pa_context_new</span> <span class="ruby-ivar">@mainloop</span>.<span class="ruby-identifier">api</span>, <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:name</span>]
+
+
+        <span class="ruby-comment cmt"># State callback management</span>
+        <span class="ruby-ivar">@state_callback_handler</span> = <span class="ruby-constant">Proc</span>.<span class="ruby-identifier">new</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">context</span>, <span class="ruby-identifier">user_data</span><span class="ruby-operator">|</span> 
+          <span class="ruby-ivar">@state_callback_proc</span>.<span class="ruby-identifier">call</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-ivar">@state_callback_user_data</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@state_callback_proc</span>
+        }
+
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:state_callback_proc</span>] <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:state_callback_proc</span>].<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">Proc</span>
+          <span class="ruby-ivar">@state_callback_proc</span> = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:state_callback_proc</span>]
+          <span class="ruby-ivar">@state_callback_user_data</span> = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:state_callback_user_data</span>]
+        <span class="ruby-keyword kw">end</span>
+
+        <span class="ruby-identifier">pa_context_set_state_callback</span> <span class="ruby-ivar">@context</span>, <span class="ruby-ivar">@state_callback_handler</span>, <span class="ruby-keyword kw">nil</span>
       <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>
