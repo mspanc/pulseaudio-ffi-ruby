@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="../../../../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/asynchronous/operation/context.rb, line 6</span>
+  <pre><span class="ruby-comment cmt"># File lib/asynchronous/operation/context.rb, line 11</span>
         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">name=</span>(<span class="ruby-identifier">name</span>)
           <span class="ruby-identifier">initialize_success_callback_handler</span>
           <span class="ruby-ivar">@pointer</span> = <span class="ruby-identifier">pa_context_set_name</span> <span class="ruby-ivar">@context</span>.<span class="ruby-identifier">pointer</span>, <span class="ruby-identifier">name</span>, <span class="ruby-ivar">@success_callback_handler</span>, <span class="ruby-keyword kw">nil</span>

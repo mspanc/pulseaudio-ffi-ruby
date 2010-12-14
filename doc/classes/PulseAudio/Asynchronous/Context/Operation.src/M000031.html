@@ -13,7 +13,7 @@
   <pre><span class="ruby-comment cmt"># File lib/asynchronous/operation/context.rb, line 29</span>
         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">server_info</span>
           <span class="ruby-identifier">initialize_server_info_callback_handler</span>
-          <span class="ruby-identifier">pa_context_get_server_info</span> <span class="ruby-ivar">@parent</span>.<span class="ruby-identifier">pointer</span>, <span class="ruby-ivar">@server_info_callback_handler</span>, <span class="ruby-keyword kw">nil</span>
+          <span class="ruby-identifier">pa_context_get_server_info</span> <span class="ruby-ivar">@context</span>.<span class="ruby-identifier">pointer</span>, <span class="ruby-ivar">@server_info_callback_handler</span>, <span class="ruby-keyword kw">nil</span>
         <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

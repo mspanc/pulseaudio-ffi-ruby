@@ -13,7 +13,21 @@ module PulseAudio
       module Callbacks # :nodoc:
         def self.included(base) # :nodoc:
           base.class_eval do
-            callback :pa_context_success_cb_t, [ :pointer, :int, :pointer ], :void
+            protected 
+              callback :pa_context_success_cb_t, [ :pointer, :int, :pointer ], :void
+              
+              def callback
+                @block || @operation.callback_proc
+              end
+              
+              def initialize_success_callback_handler # :nodoc:
+                unless @success_callback_handler
+                  @success_callback_handler = Proc.new{ |context, success, user_data|
+                    callback.call self, success == 1, @user_data if callback
+                  }
+                end
+              end
+
           end
         end
       end
@@ -25,10 +39,7 @@ module PulseAudio
               def initialize_list
                 @list = []
               end
-              
-              def callback
-                @block || @operation.callback_proc
-              end
+
           end
         end
       end
@@ -36,14 +47,17 @@ module PulseAudio
   end
 end
 
-require 'lib/asynchronous/errors'
-require 'lib/asynchronous/types/enums'
-require 'lib/asynchronous/types/structures'
-require 'lib/asynchronous/mainloop/glib'
-require 'lib/asynchronous/operation'
+load_dir = File.dirname(File.expand_path(__FILE__))
 
-require 'lib/asynchronous/context'
-require 'lib/asynchronous/operation/context'
+require File.join(load_dir, 'asynchronous/errors')
+require File.join(load_dir, 'asynchronous/types/enums')
+require File.join(load_dir, 'asynchronous/types/structures')
+require File.join(load_dir, 'asynchronous/mainloop/glib')
+require File.join(load_dir, 'asynchronous/operation')
 
-require 'lib/asynchronous/client'
+require File.join(load_dir, 'asynchronous/context')
+require File.join(load_dir, 'asynchronous/operation/context')
+
+require File.join(load_dir, 'asynchronous/client')
+require File.join(load_dir, 'asynchronous/operation/client')
 

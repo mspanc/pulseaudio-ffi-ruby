@@ -5,14 +5,15 @@
 
 <html>
 <head>
-  <title>name= (PulseAudio::Asynchronous::Context)</title>
+  <title>operation (PulseAudio::Asynchronous::Context)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
   <pre><span class="ruby-comment cmt"># File lib/asynchronous/context.rb, line 136</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">name=</span>(<span class="ruby-identifier">name</span>)
-        <span class="ruby-identifier">operation</span>.<span class="ruby-identifier">name</span> = <span class="ruby-identifier">name</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">operation</span>(<span class="ruby-identifier">options</span> = <span class="ruby-keyword kw">nil</span>)
+        <span class="ruby-comment cmt"># FIXME TODO change name to ContextOperation to distinguish from ClientOperation etc.</span>
+        <span class="ruby-constant">Operation</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">options</span>
       <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

@@ -10,7 +10,7 @@ module PulseAudio
         # TODO FIXME missing block!
         def name=(name)
           initialize_success_callback_handler
-          @pointer = pa_context_set_name @context.pointer, name, @success_callback_handler, nil
+          @pointer = pa_context_set_name @parent.pointer, name, @success_callback_handler, nil
         end
         alias_method :set_name, :name=
 
@@ -22,13 +22,13 @@ module PulseAudio
         # TODO FIXME missing block!
         def exit_daemon!
           initialize_success_callback_handler
-          @pointer = pa_context_exit_daemon @context.pointer, @success_callback_handler, nil
+          @pointer = pa_context_exit_daemon @parent.pointer, @success_callback_handler, nil
         end
         
         # TODO FIXME missing block!
         def server_info
           initialize_server_info_callback_handler
-          pa_context_get_server_info @context.pointer, @server_info_callback_handler, nil
+          pa_context_get_server_info @parent.pointer, @server_info_callback_handler, nil
         end
         
         # Returns PulseAudio::Asynchronous::Clients object, which can be used to query information
@@ -68,19 +68,12 @@ module PulseAudio
                        }
                 
 
-                @callback_proc.call self, info, @user_data if @callback_proc
+                callback.call self, info, @user_data if callback
               }
             end
           end
           
-          def initialize_success_callback_handler # :nodoc:
-            unless @success_callback_handler
-              @success_callback_handler = Proc.new{ |context, success, user_data|
-                @callback_proc.call self, success == 1, @user_data if @callback_proc
-              }
-            end
-          end
-      
+
           
 
 

@@ -5,21 +5,16 @@
 
 <html>
 <head>
-  <title>new (PulseAudio::Asynchronous::Operation)</title>
+  <title>state (PulseAudio::Asynchronous::Operation)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/asynchronous/operation.rb, line 9</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">context</span>, <span class="ruby-identifier">options</span> = {})
-        <span class="ruby-ivar">@context</span> = <span class="ruby-identifier">context</span>
-
-        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">options</span>
-          <span class="ruby-ivar">@user_data</span> = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:user_data</span>]
-          <span class="ruby-ivar">@callback_proc</span> = <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:callback_proc</span>]
-        <span class="ruby-keyword kw">end</span>
-
-        <span class="ruby-ivar">@pointer</span> = <span class="ruby-keyword kw">nil</span>
+  <pre><span class="ruby-comment cmt"># File lib/asynchronous/operation.rb, line 23</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">state</span>
+        <span class="ruby-identifier">raise</span> <span class="ruby-operator">::</span><span class="ruby-constant">PulseAudio</span><span class="ruby-operator">::</span><span class="ruby-constant">Asynchronous</span><span class="ruby-operator">::</span><span class="ruby-constant">Errors</span><span class="ruby-operator">::</span><span class="ruby-constant">OperationNotPerformedYetError</span>, <span class="ruby-value str">&quot;You must perform some action first on this PulseAudio::Operation object to check its state&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@pointer</span>
+        
+        <span class="ruby-identifier">pa_operation_get_state</span> <span class="ruby-ivar">@pointer</span>
       <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

@@ -86,9 +86,8 @@
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000006">cancel!</a>&nbsp;&nbsp;
-      <a href="#M000004">new</a>&nbsp;&nbsp;
-      <a href="#M000005">state</a>&nbsp;&nbsp;
+      <a href="#M000005">cancel!</a>&nbsp;&nbsp;
+      <a href="#M000004">state</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -121,7 +120,7 @@
           <td class="context-item-desc"></td>
         </tr>
         <tr class="top-aligned-row context-row">
-          <td class="context-item-name">context</td>
+          <td class="context-item-name">parent</td>
           <td class="context-item-value">&nbsp;[R]&nbsp;</td>
           <td class="context-item-desc"></td>
         </tr>
@@ -143,37 +142,7 @@
 
     <!-- if method_list -->
     <div id="methods">
-      <h3 class="section-bar">Public Class methods</h3>
-
-      <div id="method-M000004" class="method-detail">
-        <a name="M000004"></a>
-
-        <div class="method-heading">
-          <a href="Operation.src/M000004.html" target="Code" class="method-signature"
-            onclick="popupCode('Operation.src/M000004.html');return false;">
-          <span class="method-name">new</span><span class="method-args">(context, options = {})</span>
-          </a>
-        </div>
-      
-        <div class="method-description">
-        </div>
-      </div>
-
       <h3 class="section-bar">Public Instance methods</h3>
-
-      <div id="method-M000006" class="method-detail">
-        <a name="M000006"></a>
-
-        <div class="method-heading">
-          <a href="Operation.src/M000006.html" target="Code" class="method-signature"
-            onclick="popupCode('Operation.src/M000006.html');return false;">
-          <span class="method-name">cancel!</span><span class="method-args">()</span>
-          </a>
-        </div>
-      
-        <div class="method-description">
-        </div>
-      </div>
 
       <div id="method-M000005" class="method-detail">
         <a name="M000005"></a>
@@ -181,11 +150,40 @@
         <div class="method-heading">
           <a href="Operation.src/M000005.html" target="Code" class="method-signature"
             onclick="popupCode('Operation.src/M000005.html');return false;">
+          <span class="method-name">cancel!</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Cancel the operation.
+</p>
+<p>
+Beware! This will not necessarily cancel the execution of the operation on
+the server side. However it will make sure that the callback associated
+with this operation will not be called anymore, effectively disabling the
+operation from the client side&#8216;s view.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000004" class="method-detail">
+        <a name="M000004"></a>
+
+        <div class="method-heading">
+          <a href="Operation.src/M000004.html" target="Code" class="method-signature"
+            onclick="popupCode('Operation.src/M000004.html');return false;">
           <span class="method-name">state</span><span class="method-args">()</span>
           </a>
         </div>
       
         <div class="method-description">
+          <p>
+Return the current status of the operation.
+</p>
+<p>
+Valid return values are :running, :done, :cancelled.
+</p>
         </div>
       </div>
 

@@ -59,6 +59,10 @@
                 lib/asynchronous/client.rb
                 </a>
         <br />
+                <a href="../../../files/lib/asynchronous/operation/client_rb.html">
+                lib/asynchronous/operation/client.rb
+                </a>
+        <br />
             </td>
         </tr>
 
@@ -86,8 +90,7 @@
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000010">kill!</a>&nbsp;&nbsp;
-      <a href="#M000009">me?</a>&nbsp;&nbsp;
+      <a href="#M000008">operation</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -95,16 +98,15 @@
 
 
     <!-- if includes -->
-    <div id="includes">
-      <h3 class="section-bar">Included Modules</h3>
-
-      <div id="includes-list">
-        <span class="include-name">Common::Callbacks</span>
-      </div>
-    </div>
 
     <div id="section">
 
+    <div id="class-list">
+      <h3 class="section-bar">Classes and Modules</h3>
+
+      Class <a href="Client/Operation.html" class="link">PulseAudio::Asynchronous::Client::Operation</a><br />
+
+    </div>
 
 
 
@@ -114,6 +116,11 @@
 
       <div class="name-list">
         <table>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">context</td>
+          <td class="context-item-value">&nbsp;[R]&nbsp;</td>
+          <td class="context-item-desc"></td>
+        </tr>
         <tr class="top-aligned-row context-row">
           <td class="context-item-name">driver</td>
           <td class="context-item-value">&nbsp;[R]&nbsp;</td>
@@ -154,37 +161,27 @@
     <div id="methods">
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000010" class="method-detail">
-        <a name="M000010"></a>
+      <div id="method-M000008" class="method-detail">
+        <a name="M000008"></a>
 
         <div class="method-heading">
-          <a href="Client.src/M000010.html" target="Code" class="method-signature"
-            onclick="popupCode('Client.src/M000010.html');return false;">
-          <span class="method-name">kill!</span><span class="method-args">()</span>
+          <a href="Client.src/M000008.html" target="Code" class="method-signature"
+            onclick="popupCode('Client.src/M000008.html');return false;">
+          <span class="method-name">operation</span><span class="method-args">(options = nil)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Kills this client or disconnects the context if it is invoked on myself.
+Return a new <a href="Client/Operation.html">Client::Operation</a> object.
 </p>
-        </div>
-      </div>
-
-      <div id="method-M000009" class="method-detail">
-        <a name="M000009"></a>
-
-        <div class="method-heading">
-          <a href="Client.src/M000009.html" target="Code" class="method-signature"
-            onclick="popupCode('Client.src/M000009.html');return false;">
-          <span class="method-name">me?</span><span class="method-args">()</span>
-          </a>
-        </div>
-      
-        <div class="method-description">
-          <p>
-Checks if this particular object represents the same client that was used
-to query one. In other words, it says if this object is your application.
+<p>
+You can use returned object to perform asynchronous tasks on this client.
+</p>
+<p>
+Please read the <a
+href="https://github.com/saepia/pulseaudio-ffi-ruby/wiki/Documentation-examples">wiki</a>
+for more information about this syntax.
 </p>
         </div>
       </div>

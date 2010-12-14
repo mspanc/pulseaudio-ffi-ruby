@@ -11,8 +11,6 @@ module PulseAudio
       # 
       # +options+ is a Hash containing some initial parameters. Valid keys are:
       # * :mainloop (optional) - currently can contain only value of :glib because currently it's only supported mainloop, if not provided, it will be substituted ith :glib,
-      # * :state_callback_proc (optional, but highly recommended) - has to contain Proc object with two arguments (context, user_data) that will be called on connection's state changes,
-      # * :state_callback_user_data (optional) - data that will be passed as second argument to Proc defined as :state_callback_proc's value
       # * :name (optional) - application name passed to PulseAudio, if not provided, it will be substituted with result of File.basename($0)
       def initialize(options = {})
         options[:name] ||= File.basename($0)
@@ -27,25 +25,59 @@ module PulseAudio
         end
 
         @context = pa_context_new @mainloop.api, options[:name]
+      end
 
-        # State callback management
-        @state_callback_handler = Proc.new{|context, user_data| 
-          @state_callback_proc.call(self, @state_callback_user_data) if @state_callback_proc
-        }
-        pa_context_set_state_callback @context, @state_callback_handler, nil
+      # Set a callback function that is called whenever a meta/policy control event is received.
+      #
+      # +proc+ is as Proc object or lambda that accepts four arguments: context, name, proplist, user_data
+      #
+      # If you want to pass any user data to this callback, use Context#event_callback_user_data=
+      def event_callback_proc=(proc)
+        unless @event_callback_handler
+          @event_callback_handler = Proc.new{|context, name, proplist, user_data| 
+            # TODO proplist parsing
+            @event_callback_proc.call(self, name, proplist, @event_callback_user_data) if @event_callback_proc
+          }
+        end
+        
+        if proc.nil?
+          pa_context_set_event_callback @context, nil, nil      
+        elsif proc.respond_to? :call
+          @event_callback_proc = proc
+          pa_context_set_event_callback @context, @event_callback_handler, nil      
+        else
+          raise ArgumentError, "You mast pass a Proc or lambda to event_callback_proc="
+        end
+      end
 
-        # Event callback management
-        @event_callback_handler = Proc.new{|context, user_data| 
-          @event_callback_proc.call(self, @event_callback_user_data) if @event_callback_proc
-        }
-        pa_context_set_event_callback @context, @event_callback_handler, nil
+      
+      # Set a callback function that is called whenever the context status changes.
+      #
+      # +proc+ is as Proc object or lambda that accepts two arguments: context, user_data
+      #
+      # If you want to pass any user data to this callback, use Context#state_callback_user_data=
+      def state_callback_proc=(proc)
+        unless @state_callback_handler
+          @state_callback_handler = Proc.new{|context, user_data| 
+            @state_callback_proc.call(self, @state_callback_user_data) if @state_callback_proc
+          }
+        end
+        
+        if proc.nil?
+          pa_context_set_state_callback @context, nil, nil      
+        elsif proc.respond_to? :call
+          @state_callback_proc = proc
+          pa_context_set_state_callback @context, @state_callback_handler, nil      
+        else
+          raise ArgumentError, "You mast pass a Proc or lambda to state_callback_proc="
+        end
       end
       
       def pointer # :nodoc:
         @context
       end
 
-      # Connects to the server.
+      # Connect to the server.
       #
       # +options+ is a Hash containing connection parameters. Valid keys are:
       # * :name (optional) - name of the PulseAudio server (useful if there're running more than one),
@@ -54,77 +86,57 @@ module PulseAudio
         # TODO proplist support
       end
       
-      # Disconnects immediately from the server.
+      # Disconnect immediately from the server.
       def disconnect
         pa_context_disconnect @context
       end
       
-      # Returns current connection state. Valid states are :unconnected, :connecting, :authorizing, :setting_name, :ready, :failed, :terminated.
+      # Return current connection state. 
+      #
+      # Valid states are :unconnected, :connecting, :authorizing, :setting_name, :ready, :failed, :terminated.
       def state
         pa_context_get_state @context
       end
       
-      # Returns index of client associated with the context.
+      # Return index of client associated with the context.
       def index
         pa_context_get_index @context
       end
       
-      # Returns protocol version supported by the client.
+      # Return protocol version supported by the client.
       def protocol_version
         pa_context_get_protocol_version @context
       end
       
+      # Return the server name this context is connected to.
       def server_name
         pa_context_get_server @context
       end
       
-      # Returns protocol version supported by the server.
+      # Return protocol version supported by the server.
       def server_protocol_version
         pa_context_get_server_protocol_version @context
       end
       
-      # Returns true if connected server is local (on the same machine, not over the network).
+      # Return true if connected server is local (on the same machine, not over the network).
       def is_local?
         pa_context_is_local(@context) == 1
       end
       
+      # Return true if some data is pending to be written to the connection.
       def is_pending?
         pa_context_is_pending(@context) != 0
       end
       
-      
+      # Return a new Context::Operation object.
+      #
+      # You can use returned object to perform asynchronous tasks on this context.
+      #
+      # Please read the wiki[https://github.com/saepia/pulseaudio-ffi-ruby/wiki/Documentation-examples] for more information about this syntax.
       def operation(options = nil)
-        # FIXME TODO change name to ContextOperation to distinguish from ClientOperation etc.
         Operation.new self, options
       end
             
-      # Shortcut for operation.name=
-      #
-      # Please see Operation#name= for more information.
-      def name=(name)
-        operation.name = name
-      end
-
-      # Shortcut for operation.set_name
-      #
-      # Please see Operation#set_name for more information.
-      def set_name(name)
-        operation.set_name name
-      end
-      
-      # Shortcut for operation.exit_daemon!
-      #
-      # Please see Operation#exit_daemon! for more information.
-      def exit_daemon!
-        operation.exit_daemon!
-      end
-
-      # Shortcut for operation.exit_daemon!
-      #
-      # Please see Operation#exit_daemon! for more information.
-      def exit_daemon!
-        operation.exit_daemon!
-      end
 
       protected
         include Common::Callbacks
