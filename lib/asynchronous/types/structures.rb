@@ -33,6 +33,23 @@ module PulseAudio
                  :description, :string,
                  :priority, :uint32
         end
+        
+        class SinkInputInfo < ::FFI::Struct
+          layout :index, :uint32,
+                 :name, :string,
+                 :owner_module, :uint32,
+                 :client, :uint32,
+                 :sink, :uint32, 
+                 :sample_spec, SampleSpec,
+                 :channel_map, ChannelMap,
+                 :volume, CVolume,
+                 :buffer_usec, Typedefs::Usec_t,
+                 :sink_usec, Typedefs::Usec_t,
+                 :resample_method, :string,
+                 :driver, :string,
+                 :mute, :int,
+                 :proplist, :pointer # FIXME to proplist
+        end
                 
         class SinkInfo < ::FFI::Struct
           layout :name, :string,

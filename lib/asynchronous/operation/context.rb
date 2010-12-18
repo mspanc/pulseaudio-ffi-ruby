@@ -43,6 +43,11 @@ module PulseAudio
           Sinks.new self
         end
         
+        # Returns PulseAudio::Asynchronous::SinkInputs object, which can be used to query information
+        # about available sink inputs.
+        def sink_inputs
+          SinkInputs.new self
+        end
 
         protected
           include Common::Callbacks

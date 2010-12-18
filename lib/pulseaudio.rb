@@ -18,7 +18,7 @@ module PulseAudio
               callback :pa_context_success_cb_t, [ :pointer, :int, :pointer ], :void
               
               def callback
-                @block || @operation.callback_proc
+                @block || @callback_proc
               end
               
               def initialize_success_callback_handler # :nodoc:
@@ -67,4 +67,7 @@ require File.join(load_dir, 'asynchronous/operation/client')
 
 require File.join(load_dir, 'asynchronous/sink')
 require File.join(load_dir, 'asynchronous/operation/sink')
+
+require File.join(load_dir, 'asynchronous/sink-input')
+require File.join(load_dir, 'asynchronous/operation/sink-input')
 
