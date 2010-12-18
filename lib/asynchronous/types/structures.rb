@@ -77,7 +77,13 @@ module PulseAudio
                  
         end
                 
-
+        class ModuleInfo < ::FFI::Struct
+          layout :index, :uint32,
+                 :name, :string,
+                 :argument, :string,
+                 :n_used, :uint32,
+                 :proplist, :pointer # FIXME to proplisdt
+        end
         
 
 

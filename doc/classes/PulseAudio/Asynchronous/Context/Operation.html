@@ -86,12 +86,14 @@
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000034">clients</a>&nbsp;&nbsp;
-      <a href="#M000032">exit_daemon!</a>&nbsp;&nbsp;
-      <a href="#M000030">name=</a>&nbsp;&nbsp;
-      <a href="#M000033">server_info</a>&nbsp;&nbsp;
-      <a href="#M000031">set_name</a>&nbsp;&nbsp;
-      <a href="#M000035">sinks</a>&nbsp;&nbsp;
+      <a href="#M000040">clients</a>&nbsp;&nbsp;
+      <a href="#M000038">exit_daemon!</a>&nbsp;&nbsp;
+      <a href="#M000043">modules</a>&nbsp;&nbsp;
+      <a href="#M000036">name=</a>&nbsp;&nbsp;
+      <a href="#M000039">server_info</a>&nbsp;&nbsp;
+      <a href="#M000037">set_name</a>&nbsp;&nbsp;
+      <a href="#M000042">sink_inputs</a>&nbsp;&nbsp;
+      <a href="#M000041">sinks</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -120,12 +122,12 @@
     <div id="methods">
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000034" class="method-detail">
-        <a name="M000034"></a>
+      <div id="method-M000040" class="method-detail">
+        <a name="M000040"></a>
 
         <div class="method-heading">
-          <a href="Operation.src/M000034.html" target="Code" class="method-signature"
-            onclick="popupCode('Operation.src/M000034.html');return false;">
+          <a href="Operation.src/M000040.html" target="Code" class="method-signature"
+            onclick="popupCode('Operation.src/M000040.html');return false;">
           <span class="method-name">clients</span><span class="method-args">()</span>
           </a>
         </div>
@@ -134,17 +136,17 @@
           <p>
 Returns <a href="../Clients.html">PulseAudio::Asynchronous::Clients</a>
 object, which can be used to query information about <a
-href="Operation.html#M000034">clients</a> connected to the server.
+href="Operation.html#M000040">clients</a> connected to the server.
 </p>
         </div>
       </div>
 
-      <div id="method-M000032" class="method-detail">
-        <a name="M000032"></a>
+      <div id="method-M000038" class="method-detail">
+        <a name="M000038"></a>
 
         <div class="method-heading">
-          <a href="Operation.src/M000032.html" target="Code" class="method-signature"
-            onclick="popupCode('Operation.src/M000032.html');return false;">
+          <a href="Operation.src/M000038.html" target="Code" class="method-signature"
+            onclick="popupCode('Operation.src/M000038.html');return false;">
           <span class="method-name">exit_daemon!</span><span class="method-args">()</span>
           </a>
         </div>
@@ -163,12 +165,30 @@ TODO FIXME missing block!
         </div>
       </div>
 
-      <div id="method-M000030" class="method-detail">
-        <a name="M000030"></a>
+      <div id="method-M000043" class="method-detail">
+        <a name="M000043"></a>
 
         <div class="method-heading">
-          <a href="Operation.src/M000030.html" target="Code" class="method-signature"
-            onclick="popupCode('Operation.src/M000030.html');return false;">
+          <a href="Operation.src/M000043.html" target="Code" class="method-signature"
+            onclick="popupCode('Operation.src/M000043.html');return false;">
+          <span class="method-name">modules</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Returns <a href="../Modules.html">PulseAudio::Asynchronous::Modules</a>
+object, which can be used to query information about available sink inputs.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000036" class="method-detail">
+        <a name="M000036"></a>
+
+        <div class="method-heading">
+          <a href="Operation.src/M000036.html" target="Code" class="method-signature"
+            onclick="popupCode('Operation.src/M000036.html');return false;">
           <span class="method-name">name=</span><span class="method-args">(name)</span>
           </a>
         </div>
@@ -184,12 +204,12 @@ TODO FIXME missing block!
         </div>
       </div>
 
-      <div id="method-M000033" class="method-detail">
-        <a name="M000033"></a>
+      <div id="method-M000039" class="method-detail">
+        <a name="M000039"></a>
 
         <div class="method-heading">
-          <a href="Operation.src/M000033.html" target="Code" class="method-signature"
-            onclick="popupCode('Operation.src/M000033.html');return false;">
+          <a href="Operation.src/M000039.html" target="Code" class="method-signature"
+            onclick="popupCode('Operation.src/M000039.html');return false;">
           <span class="method-name">server_info</span><span class="method-args">()</span>
           </a>
         </div>
@@ -201,8 +221,8 @@ TODO FIXME missing block!
         </div>
       </div>
 
-      <div id="method-M000031" class="method-detail">
-        <a name="M000031"></a>
+      <div id="method-M000037" class="method-detail">
+        <a name="M000037"></a>
 
         <div class="method-heading">
           <span class="method-name">set_name</span><span class="method-args">(name)</span>
@@ -215,12 +235,31 @@ Alias for name=
         </div>
       </div>
 
-      <div id="method-M000035" class="method-detail">
-        <a name="M000035"></a>
+      <div id="method-M000042" class="method-detail">
+        <a name="M000042"></a>
 
         <div class="method-heading">
-          <a href="Operation.src/M000035.html" target="Code" class="method-signature"
-            onclick="popupCode('Operation.src/M000035.html');return false;">
+          <a href="Operation.src/M000042.html" target="Code" class="method-signature"
+            onclick="popupCode('Operation.src/M000042.html');return false;">
+          <span class="method-name">sink_inputs</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Returns <a
+href="../SinkInputs.html">PulseAudio::Asynchronous::SinkInputs</a> object,
+which can be used to query information about available sink inputs.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000041" class="method-detail">
+        <a name="M000041"></a>
+
+        <div class="method-heading">
+          <a href="Operation.src/M000041.html" target="Code" class="method-signature"
+            onclick="popupCode('Operation.src/M000041.html');return false;">
           <span class="method-name">sinks</span><span class="method-args">()</span>
           </a>
         </div>
@@ -229,7 +268,7 @@ Alias for name=
           <p>
 Returns <a href="../Sinks.html">PulseAudio::Asynchronous::Sinks</a> object,
 which can be used to query information about available <a
-href="Operation.html#M000035">sinks</a>.
+href="Operation.html#M000041">sinks</a>.
 </p>
         </div>
       </div>
