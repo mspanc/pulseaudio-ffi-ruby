@@ -90,19 +90,19 @@
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000014">connect</a>&nbsp;&nbsp;
-      <a href="#M000015">disconnect</a>&nbsp;&nbsp;
-      <a href="#M000012">event_callback_proc=</a>&nbsp;&nbsp;
-      <a href="#M000017">index</a>&nbsp;&nbsp;
-      <a href="#M000021">is_local?</a>&nbsp;&nbsp;
-      <a href="#M000022">is_pending?</a>&nbsp;&nbsp;
-      <a href="#M000011">new</a>&nbsp;&nbsp;
-      <a href="#M000023">operation</a>&nbsp;&nbsp;
-      <a href="#M000018">protocol_version</a>&nbsp;&nbsp;
-      <a href="#M000019">server_name</a>&nbsp;&nbsp;
-      <a href="#M000020">server_protocol_version</a>&nbsp;&nbsp;
-      <a href="#M000016">state</a>&nbsp;&nbsp;
-      <a href="#M000013">state_callback_proc=</a>&nbsp;&nbsp;
+      <a href="#M000020">connect</a>&nbsp;&nbsp;
+      <a href="#M000021">disconnect</a>&nbsp;&nbsp;
+      <a href="#M000018">event_callback_proc=</a>&nbsp;&nbsp;
+      <a href="#M000023">index</a>&nbsp;&nbsp;
+      <a href="#M000027">is_local?</a>&nbsp;&nbsp;
+      <a href="#M000028">is_pending?</a>&nbsp;&nbsp;
+      <a href="#M000017">new</a>&nbsp;&nbsp;
+      <a href="#M000029">operation</a>&nbsp;&nbsp;
+      <a href="#M000024">protocol_version</a>&nbsp;&nbsp;
+      <a href="#M000025">server_name</a>&nbsp;&nbsp;
+      <a href="#M000026">server_protocol_version</a>&nbsp;&nbsp;
+      <a href="#M000022">state</a>&nbsp;&nbsp;
+      <a href="#M000019">state_callback_proc=</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -146,6 +146,11 @@
           <td class="context-item-desc"></td>
         </tr>
         <tr class="top-aligned-row context-row">
+          <td class="context-item-name">properties</td>
+          <td class="context-item-value">&nbsp;[R]&nbsp;</td>
+          <td class="context-item-desc"></td>
+        </tr>
+        <tr class="top-aligned-row context-row">
           <td class="context-item-name">state_callback_proc</td>
           <td class="context-item-value">&nbsp;[RW]&nbsp;</td>
           <td class="context-item-desc"></td>
@@ -165,25 +170,25 @@
     <div id="methods">
       <h3 class="section-bar">Public Class methods</h3>
 
-      <div id="method-M000011" class="method-detail">
-        <a name="M000011"></a>
+      <div id="method-M000017" class="method-detail">
+        <a name="M000017"></a>
 
         <div class="method-heading">
-          <a href="Context.src/M000011.html" target="Code" class="method-signature"
-            onclick="popupCode('Context.src/M000011.html');return false;">
-          <span class="method-name">new</span><span class="method-args">(options = {})</span>
+          <a href="Context.src/M000017.html" target="Code" class="method-signature"
+            onclick="popupCode('Context.src/M000017.html');return false;">
+          <span class="method-name">new</span><span class="method-args">(options = {}, properties = {})</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Initializes <a href="Context.html#M000011">new</a> context (object that
+Initializes <a href="Context.html#M000017">new</a> context (object that
 represents particular connection to the <a
 href="../../PulseAudio.html">PulseAudio</a> server).
 </p>
 <p>
-<tt>options</tt> is a Hash containing some initial parameters. Valid keys
-are:
+<tt>options</tt> is an optional Hash containing some initial parameters.
+Valid keys are:
 </p>
 <ul>
 <li>:mainloop (optional) - currently can contain only value of :glib because
@@ -196,18 +201,25 @@ href="../../PulseAudio.html">PulseAudio</a>, if not provided, it will be
 substituted with result of File.basename($0)
 
 </li>
+<li>:properties (optional) - Hash containing some context descriptive
+properties. Please see <a href="PropList.html">PropList</a> for more
+information about valid keys and values and original C library <a
+href="http://0pointer.de/lennart/projects/pulseaudio/doxygen/proplist_8h.html">documentation</a>
+for key descriptions.
+
+</li>
 </ul>
         </div>
       </div>
 
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000014" class="method-detail">
-        <a name="M000014"></a>
+      <div id="method-M000020" class="method-detail">
+        <a name="M000020"></a>
 
         <div class="method-heading">
-          <a href="Context.src/M000014.html" target="Code" class="method-signature"
-            onclick="popupCode('Context.src/M000014.html');return false;">
+          <a href="Context.src/M000020.html" target="Code" class="method-signature"
+            onclick="popupCode('Context.src/M000020.html');return false;">
           <span class="method-name">connect</span><span class="method-args">(options = {})</span>
           </a>
         </div>
@@ -230,12 +242,12 @@ there&#8216;re running more than one),
         </div>
       </div>
 
-      <div id="method-M000015" class="method-detail">
-        <a name="M000015"></a>
+      <div id="method-M000021" class="method-detail">
+        <a name="M000021"></a>
 
         <div class="method-heading">
-          <a href="Context.src/M000015.html" target="Code" class="method-signature"
-            onclick="popupCode('Context.src/M000015.html');return false;">
+          <a href="Context.src/M000021.html" target="Code" class="method-signature"
+            onclick="popupCode('Context.src/M000021.html');return false;">
           <span class="method-name">disconnect</span><span class="method-args">()</span>
           </a>
         </div>
@@ -247,12 +259,12 @@ Disconnect immediately from the server.
         </div>
       </div>
 
-      <div id="method-M000012" class="method-detail">
-        <a name="M000012"></a>
+      <div id="method-M000018" class="method-detail">
+        <a name="M000018"></a>
 
         <div class="method-heading">
-          <a href="Context.src/M000012.html" target="Code" class="method-signature"
-            onclick="popupCode('Context.src/M000012.html');return false;">
+          <a href="Context.src/M000018.html" target="Code" class="method-signature"
+            onclick="popupCode('Context.src/M000018.html');return false;">
           <span class="method-name">event_callback_proc=</span><span class="method-args">(proc)</span>
           </a>
         </div>
@@ -273,30 +285,30 @@ Context#event_callback_user_data=
         </div>
       </div>
 
-      <div id="method-M000017" class="method-detail">
-        <a name="M000017"></a>
+      <div id="method-M000023" class="method-detail">
+        <a name="M000023"></a>
 
         <div class="method-heading">
-          <a href="Context.src/M000017.html" target="Code" class="method-signature"
-            onclick="popupCode('Context.src/M000017.html');return false;">
+          <a href="Context.src/M000023.html" target="Code" class="method-signature"
+            onclick="popupCode('Context.src/M000023.html');return false;">
           <span class="method-name">index</span><span class="method-args">()</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Return <a href="Context.html#M000017">index</a> of client associated with
+Return <a href="Context.html#M000023">index</a> of client associated with
 the context.
 </p>
         </div>
       </div>
 
-      <div id="method-M000021" class="method-detail">
-        <a name="M000021"></a>
+      <div id="method-M000027" class="method-detail">
+        <a name="M000027"></a>
 
         <div class="method-heading">
-          <a href="Context.src/M000021.html" target="Code" class="method-signature"
-            onclick="popupCode('Context.src/M000021.html');return false;">
+          <a href="Context.src/M000027.html" target="Code" class="method-signature"
+            onclick="popupCode('Context.src/M000027.html');return false;">
           <span class="method-name">is_local?</span><span class="method-args">()</span>
           </a>
         </div>
@@ -309,12 +321,12 @@ network).
         </div>
       </div>
 
-      <div id="method-M000022" class="method-detail">
-        <a name="M000022"></a>
+      <div id="method-M000028" class="method-detail">
+        <a name="M000028"></a>
 
         <div class="method-heading">
-          <a href="Context.src/M000022.html" target="Code" class="method-signature"
-            onclick="popupCode('Context.src/M000022.html');return false;">
+          <a href="Context.src/M000028.html" target="Code" class="method-signature"
+            onclick="popupCode('Context.src/M000028.html');return false;">
           <span class="method-name">is_pending?</span><span class="method-args">()</span>
           </a>
         </div>
@@ -326,19 +338,19 @@ Return true if some data is pending to be written to the connection.
         </div>
       </div>
 
-      <div id="method-M000023" class="method-detail">
-        <a name="M000023"></a>
+      <div id="method-M000029" class="method-detail">
+        <a name="M000029"></a>
 
         <div class="method-heading">
-          <a href="Context.src/M000023.html" target="Code" class="method-signature"
-            onclick="popupCode('Context.src/M000023.html');return false;">
+          <a href="Context.src/M000029.html" target="Code" class="method-signature"
+            onclick="popupCode('Context.src/M000029.html');return false;">
           <span class="method-name">operation</span><span class="method-args">(options = nil)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Return a <a href="Context.html#M000011">new</a> <a
+Return a <a href="Context.html#M000017">new</a> <a
 href="Context/Operation.html">Context::Operation</a> object.
 </p>
 <p>
@@ -352,12 +364,12 @@ for more information about this syntax.
         </div>
       </div>
 
-      <div id="method-M000018" class="method-detail">
-        <a name="M000018"></a>
+      <div id="method-M000024" class="method-detail">
+        <a name="M000024"></a>
 
         <div class="method-heading">
-          <a href="Context.src/M000018.html" target="Code" class="method-signature"
-            onclick="popupCode('Context.src/M000018.html');return false;">
+          <a href="Context.src/M000024.html" target="Code" class="method-signature"
+            onclick="popupCode('Context.src/M000024.html');return false;">
           <span class="method-name">protocol_version</span><span class="method-args">()</span>
           </a>
         </div>
@@ -369,12 +381,12 @@ Return protocol version supported by the client.
         </div>
       </div>
 
-      <div id="method-M000019" class="method-detail">
-        <a name="M000019"></a>
+      <div id="method-M000025" class="method-detail">
+        <a name="M000025"></a>
 
         <div class="method-heading">
-          <a href="Context.src/M000019.html" target="Code" class="method-signature"
-            onclick="popupCode('Context.src/M000019.html');return false;">
+          <a href="Context.src/M000025.html" target="Code" class="method-signature"
+            onclick="popupCode('Context.src/M000025.html');return false;">
           <span class="method-name">server_name</span><span class="method-args">()</span>
           </a>
         </div>
@@ -386,12 +398,12 @@ Return the server name this context is connected to.
         </div>
       </div>
 
-      <div id="method-M000020" class="method-detail">
-        <a name="M000020"></a>
+      <div id="method-M000026" class="method-detail">
+        <a name="M000026"></a>
 
         <div class="method-heading">
-          <a href="Context.src/M000020.html" target="Code" class="method-signature"
-            onclick="popupCode('Context.src/M000020.html');return false;">
+          <a href="Context.src/M000026.html" target="Code" class="method-signature"
+            onclick="popupCode('Context.src/M000026.html');return false;">
           <span class="method-name">server_protocol_version</span><span class="method-args">()</span>
           </a>
         </div>
@@ -403,19 +415,19 @@ Return protocol version supported by the server.
         </div>
       </div>
 
-      <div id="method-M000016" class="method-detail">
-        <a name="M000016"></a>
+      <div id="method-M000022" class="method-detail">
+        <a name="M000022"></a>
 
         <div class="method-heading">
-          <a href="Context.src/M000016.html" target="Code" class="method-signature"
-            onclick="popupCode('Context.src/M000016.html');return false;">
+          <a href="Context.src/M000022.html" target="Code" class="method-signature"
+            onclick="popupCode('Context.src/M000022.html');return false;">
           <span class="method-name">state</span><span class="method-args">()</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Return current connection <a href="Context.html#M000016">state</a>.
+Return current connection <a href="Context.html#M000022">state</a>.
 </p>
 <p>
 Valid states are :unconnected, :connecting, :authorizing, :setting_name,
@@ -424,12 +436,12 @@ Valid states are :unconnected, :connecting, :authorizing, :setting_name,
         </div>
       </div>
 
-      <div id="method-M000013" class="method-detail">
-        <a name="M000013"></a>
+      <div id="method-M000019" class="method-detail">
+        <a name="M000019"></a>
 
         <div class="method-heading">
-          <a href="Context.src/M000013.html" target="Code" class="method-signature"
-            onclick="popupCode('Context.src/M000013.html');return false;">
+          <a href="Context.src/M000019.html" target="Code" class="method-signature"
+            onclick="popupCode('Context.src/M000019.html');return false;">
           <span class="method-name">state_callback_proc=</span><span class="method-args">(proc)</span>
           </a>
         </div>

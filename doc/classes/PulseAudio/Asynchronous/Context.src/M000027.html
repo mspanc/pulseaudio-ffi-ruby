@@ -5,14 +5,14 @@
 
 <html>
 <head>
-  <title>exit_daemon! (PulseAudio::Asynchronous::Context)</title>
+  <title>is_local? (PulseAudio::Asynchronous::Context)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/asynchronous/context.rb, line 157</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">exit_daemon!</span>
-        <span class="ruby-identifier">operation</span>.<span class="ruby-identifier">exit_daemon!</span>
+  <pre><span class="ruby-comment cmt"># File lib/asynchronous/context.rb, line 130</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">is_local?</span>
+        <span class="ruby-identifier">pa_context_is_local</span>(<span class="ruby-ivar">@context</span>) <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
       <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

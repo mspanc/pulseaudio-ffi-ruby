@@ -6,13 +6,16 @@ module PulseAudio
       
       attr_accessor :state_callback_proc, :state_callback_user_data,
                     :event_callback_proc, :event_callback_user_data
+                    
+      attr_reader   :properties
 
       # Initializes new context (object that represents particular connection to the PulseAudio server).
       # 
-      # +options+ is a Hash containing some initial parameters. Valid keys are:
+      # +options+ is an optional Hash containing some initial parameters. Valid keys are:
       # * :mainloop (optional) - currently can contain only value of :glib because currently it's only supported mainloop, if not provided, it will be substituted ith :glib,
       # * :name (optional) - application name passed to PulseAudio, if not provided, it will be substituted with result of File.basename($0)
-      def initialize(options = {})
+      # * :properties (optional) - Hash containing some context descriptive properties. Please see PropList for more information about valid keys and values and original C library documentation[http://0pointer.de/lennart/projects/pulseaudio/doxygen/proplist_8h.html] for key descriptions.
+      def initialize(options = {}, properties = {})
         options[:name] ||= File.basename($0)
         options[:mainloop] ||= :glib
         
@@ -24,7 +27,12 @@ module PulseAudio
             raise RuntimeError, "TODO: Currently only implemented MainLoop is GLib, please pass :glib to :mainloop option"
         end
 
-        @context = pa_context_new @mainloop.api, options[:name]
+        if options[:properties]
+          @properties = PropList.new options[:properties]
+          @context = pa_context_new_with_proplist @mainloop.api, options[:name], @properties.pointer
+        else
+          @context = pa_context_new @mainloop.api, options[:name]
+        end
       end
 
       # Set a callback function that is called whenever a meta/policy control event is received.
@@ -144,6 +152,7 @@ module PulseAudio
         callback :pa_context_event_cb_t, [ :pointer, :string, :pointer, :pointer ], :void # FIXME pointer as 3rd arg -> Proplist Type
 
         attach_function :pa_context_new, [ :pointer, :string ], :pointer
+        attach_function :pa_context_new_with_proplist, [ :pointer, :string, :pointer ], :pointer
         attach_function :pa_context_connect, [ :pointer, :string, :int, :pointer ], :int  # FIXME int as third arg, should be structure
         attach_function :pa_context_disconnect, [ :pointer ], :void
         attach_function :pa_context_set_state_callback, [ :pointer, :pa_context_notify_cb_t, :pointer ], :void

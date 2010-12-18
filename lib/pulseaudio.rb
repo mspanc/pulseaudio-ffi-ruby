@@ -57,6 +57,8 @@ require File.join(load_dir, 'asynchronous/types/structures')
 require File.join(load_dir, 'asynchronous/mainloop/glib')
 require File.join(load_dir, 'asynchronous/operation')
 
+require File.join(load_dir, 'asynchronous/proplist')
+
 require File.join(load_dir, 'asynchronous/context')
 require File.join(load_dir, 'asynchronous/operation/context')
 

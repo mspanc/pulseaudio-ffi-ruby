@@ -21,7 +21,7 @@ module PulseAudio
       #
       # Valid return values are :running, :done, :cancelled.
       def state
-        raise ::PulseAudio::Asynchronous::Errors::OperationNotPerformedYetError, "You must perform some action first on this PulseAudio::Operation object to check its state" unless @pointer
+        raise Errors::NotPerformedYetError, "You must perform some action first on this PulseAudio::Operation object to check its state" unless @pointer
         
         pa_operation_get_state @pointer
       end
