@@ -12,7 +12,7 @@ pa.state_callback_proc = Proc.new{ |context, user_data|
        context.operation.modules.load "module-null-sink" do |operation, mod, user_data|
          puts "Loaded module #{mod.inspect}"
          
-         mod.operation.sinks do |operation, list, user_data|
+         mod.operation.sink do |operation, list, user_data|
            puts list.inspect
          end
 

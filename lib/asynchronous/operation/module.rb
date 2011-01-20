@@ -13,8 +13,8 @@ module PulseAudio
           pa_context_unload_module @parent.context.pointer, @parent.index, @success_callback_handler, nil
         end
         
-        # Find Sinks associated with this module.
-        def sinks(&b) # :yields: operation, sinks, user_data 
+        # Find Sink associated with this module.
+        def sink(&b) # :yields: operation, sink, user_data 
           @parent.context.operation.sinks.all do |operation, list, user_data|
             b.call operation, list.detect{ |x| x if x.owner_module_index == @parent.index }, user_data
           end
