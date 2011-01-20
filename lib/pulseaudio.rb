@@ -9,7 +9,7 @@ module PulseAudio
   CHANNELS_MAX = 32 # taken from sample.h, has to be 32-bit unsigned integer
 
   
-  module Asynchronous  
+  module Asynchronous
     module Common # :nodoc:
       module Callbacks # :nodoc:
         def self.included(base) # :nodoc:
