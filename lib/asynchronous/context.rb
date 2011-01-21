@@ -5,7 +5,8 @@ module PulseAudio
       ffi_lib LIB_PA
       
       attr_accessor :state_callback_proc, :state_callback_user_data,
-                    :event_callback_proc, :event_callback_user_data
+                    :event_callback_proc, :event_callback_user_data,
+                    :subscribe_callback_proc, :subscribe_callback_user_data
                     
       attr_reader   :properties
 
@@ -34,6 +35,30 @@ module PulseAudio
           @context = pa_context_new @mainloop.api, options[:name]
         end
       end
+
+      # Set the context specific call back function that is called whenever the state of the daemon changes.
+      #
+      # +proc+ is as Proc object or lambda that accepts four arguments: context, event_type, index, user_data
+      #
+      # If you want to pass any user data to this callback, use Context#event_callback_user_data=
+      def subscribe_callback_proc=(proc)
+        unless @subscribe_callback_handler
+          @subscribe_callback_handler = Proc.new{|context, event_type, index, user_data| 
+            @subscribe_callback_proc.call(self, event_type, index, @subscribe_callback_user_data) if @subscribe_callback_proc
+          }
+        end
+        
+        if proc.nil?
+          pa_context_set_subscribe_callback @context, nil, nil      
+        elsif proc.respond_to? :call
+          @subscribe_callback_proc = proc
+          pa_context_set_subscribe_callback @context, @subscribe_callback_handler, nil
+        else
+          raise ArgumentError, "You mast pass a Proc or lambda to subscribe_callback_proc="
+        end
+      end
+
+
 
       # Set a callback function that is called whenever a meta/policy control event is received.
       #
@@ -150,6 +175,7 @@ module PulseAudio
         include Common::Callbacks
         callback :pa_context_notify_cb_t, [ :pointer, :pointer ], :void
         callback :pa_context_event_cb_t, [ :pointer, :string, :pointer, :pointer ], :void # FIXME pointer as 3rd arg -> Proplist Type
+        callback :pa_context_subscribe_cb_t, [ :pointer, Types::Enums::SubscriptionEventType, :uint32, :pointer ], :void
 
         attach_function :pa_context_new, [ :pointer, :string ], :pointer
         attach_function :pa_context_new_with_proplist, [ :pointer, :string, :pointer ], :pointer
@@ -157,6 +183,7 @@ module PulseAudio
         attach_function :pa_context_disconnect, [ :pointer ], :void
         attach_function :pa_context_set_state_callback, [ :pointer, :pa_context_notify_cb_t, :pointer ], :void
         attach_function :pa_context_set_event_callback, [ :pointer, :pa_context_event_cb_t, :pointer ], :void
+        attach_function :pa_context_set_subscribe_callback, [ :pointer, :pa_context_subscribe_cb_t, :pointer ], :void
         attach_function :pa_context_get_index, [ :pointer ], :uint32
         attach_function :pa_context_get_protocol_version, [ :pointer ], :uint32
         attach_function :pa_context_get_server, [ :pointer ], :string

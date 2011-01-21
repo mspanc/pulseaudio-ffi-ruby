@@ -54,6 +54,19 @@ module PulseAudio
         def modules
           Modules.new self
         end        
+        
+        # Enable event notification.
+        #
+        # +subscription_mask+ must be one of :null, :sink, :source, :sink_input, :source_output, :module, :client, :sample_cache, :server, :card, :all (default is :all)
+        def subscribe!(subscription_mask = :all, &b) # :yields: operation, success, user_data
+          raise ArgumentError, "subscription_mask must be one of :null, :sink, :source, :sink_input, :source_output, :module, :client, :sample_cache, :server, :card, :all" unless [ :null, :sink, :source, :sink_input, :source_output, :module, :client, :sample_cache, :server, :card, :all ].include? subscription_mask
+
+          initialize_success_callback_handler              
+          @block = b
+
+          # FIXME why FFI needs explicit conversion like Types::Enums::SubscriptionMask[subscription_mask]? Shouldn't it automatically recognize that this parameters is enum and convert symbol to integer?
+          pa_context_subscribe @parent.pointer, Types::Enums::SubscriptionMask[subscription_mask], @success_callback_handler, nil
+        end
 
         protected
           include Common::Callbacks
@@ -63,6 +76,7 @@ module PulseAudio
           attach_function :pa_context_set_name, [ :pointer, :string, :pa_context_success_cb_t, :pointer ], :pointer
           attach_function :pa_context_exit_daemon, [ :pointer, :pa_context_success_cb_t, :pointer ], :pointer
           attach_function :pa_context_get_server_info, [ :pointer, :pa_server_info_cb_t, :pointer ], :pointer
+          attach_function :pa_context_subscribe, [ :pointer, Types::Enums::SubscriptionMask, :pa_context_success_cb_t, :pointer ], :pointer
         
           def initialize_server_info_callback_handler # :nodoc:
             unless @server_info_callback_handler
