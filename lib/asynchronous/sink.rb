@@ -1,12 +1,14 @@
 module PulseAudio
   module Asynchronous
     class Sink < DaemonObject
+      include Common::FlagsFunctions
+      
       extend FFI::Library
       ffi_lib LIB_PA
 
       attr_reader :operation, :context
 
-      attr_reader :index, :name, :driver, :owner_module_index
+      attr_reader :index, :name, :driver, :owner_module_index, :flags
       
       def initialize(operation, constructor) # :nodoc:
         @operation = operation
@@ -18,6 +20,15 @@ module PulseAudio
           @name = struct[:name]
           @owner_module_index = struct[:owner_module]
           @driver = struct[:driver]
+          @flags = parse_flags struct[:flags], { 0x0001 => :hw_volume_ctrl,
+                                                 0x0002 => :latency,
+                                                 0x0004 => :hardware,
+                                                 0x0008 => :network,
+                                                 0x0010 => :hw_mute_ctrl,
+                                                 0x0020 => :decibel_volume,
+                                                 0x0040 => :flat_volume,
+                                                 0x0080 => :dynamic_latency }
+
 #          @proplist = # TODO map to proplist structure          
         end
       end
@@ -35,6 +46,7 @@ module PulseAudio
       def inspect # :nodoc:
         "#<#{self.class} ##{index} \"#{name}\">"
       end
+
     end  
     
     

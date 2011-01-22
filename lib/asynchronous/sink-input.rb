@@ -6,7 +6,9 @@ module PulseAudio
 
       attr_reader :operation, :context
 
-      attr_reader :index, :name, :driver, :owner_module_index
+      attr_reader :index, :name, :owner_module_index, :client_index, :sink_index,
+                  :sample_spec, :channel_map, :volume, :buffer_usec, :sink_usec,
+                  :resample_method, :driver, :proplist
       
       def initialize(operation, constructor) # :nodoc:
         @operation = operation
@@ -14,12 +16,28 @@ module PulseAudio
 
         if constructor.is_a? FFI::Pointer
           struct = Types::Structures::SinkInputInfo.new constructor
+
           @index = struct[:index]
           @name = struct[:name]
           @owner_module_index = struct[:owner_module]
+          @client_index = struct[:client]
+          @sink_index = struct[:sink]
+          @sample_spec = struct[:sample_spec]
+          @channel_map = struct[:channel_map]
+          @volume = struct[:volume]
+          @buffer_usec = struct[:buffer_usec]
+          @sink_usec = struct[:sink_usec]
+          @resample_method = struct[:resample_method]
           @driver = struct[:driver]
-#          @proplist = # TODO map to proplist structure          
+          @mute = struct[:mute]
+          @proplist = PropList.new struct[:proplist]
+          
         end
+      end
+      
+      # Returns true if sink input is muted
+      def muted?
+        @mute == 1
       end
       
       # Return a new SinkInput::Operation object.
@@ -30,7 +48,6 @@ module PulseAudio
       def operation(options = nil)
         Operation.new self, options
       end      
-      
       
       def inspect # :nodoc:
         "#<#{self.class} ##{index} \"#{name}\">"

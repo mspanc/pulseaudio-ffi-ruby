@@ -5,14 +5,14 @@
 
 <html>
 <head>
-  <title>operation (PulseAudio::Asynchronous::Context)</title>
+  <title>server_protocol_version (PulseAudio::Asynchronous::Context)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/asynchronous/context.rb, line 204</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">operation</span>(<span class="ruby-identifier">options</span> = <span class="ruby-keyword kw">nil</span>)
-        <span class="ruby-constant">Operation</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">options</span>
+  <pre><span class="ruby-comment cmt"># File lib/asynchronous/context.rb, line 190</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">server_protocol_version</span>
+        <span class="ruby-identifier">pa_context_get_server_protocol_version</span> <span class="ruby-ivar">@context</span>
       <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

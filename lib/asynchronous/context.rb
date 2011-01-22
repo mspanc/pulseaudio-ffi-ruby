@@ -41,10 +41,15 @@ module PulseAudio
       # +proc+ is as Proc object or lambda that accepts four arguments: context, facility, event_type, index, user_data
       #
       # Parameters passed to +proc+ are:
+      #
       # +context+ - context used to read the subscribtion message
+      #
       # +facility+ - one of :sink, :source, :sink_input, :source_output, :module, :client, :sample_cache, :server, :autoload, :card
+      #
       # +event_type+ - one of :new, :change, :remove
+      #
       # +index+ - PulseAudio object's index that causes subscribtion
+      #
       # +user_data+ - user data passed to subscribe_callback_user_data= of the active context
       #
       # If you want to pass any user data to this callback, use Context#event_callback_user_data=

@@ -5,14 +5,17 @@
 
 <html>
 <head>
-  <title>size (PulseAudio::Asynchronous::PropList)</title>
+  <title>has_key? (PulseAudio::Asynchronous::PropList)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/asynchronous/proplist.rb, line 68</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">size</span>
-        <span class="ruby-identifier">pa_proplist_size</span>(<span class="ruby-ivar">@pointer</span>)
+  <pre><span class="ruby-comment cmt"># File lib/asynchronous/proplist.rb, line 66</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">has_key?</span>(<span class="ruby-identifier">key</span>)
+        <span class="ruby-comment cmt"># TODO custom module properties like module-stream-restore.id</span>
+        <span class="ruby-identifier">raise</span> <span class="ruby-constant">Errors</span><span class="ruby-operator">::</span><span class="ruby-constant">InvalidKeyError</span>, <span class="ruby-node">&quot;Specified key '#{key}' is invalid. Valid keys are #{VALID_KEYS.join(&quot;, &quot;)}.&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">VALID_KEYS</span>.<span class="ruby-identifier">include?</span> <span class="ruby-identifier">key</span>
+      
+        <span class="ruby-identifier">pa_proplist_contains</span>(<span class="ruby-ivar">@pointer</span>, <span class="ruby-identifier">key</span>) <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
       <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

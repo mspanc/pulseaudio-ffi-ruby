@@ -1,4 +1,5 @@
 require 'ffi'
+require 'set'
 
 module PulseAudio
   LIB_PA = [ "libpulse.so.0", "libpulse.so", "libpulse" ]
@@ -41,6 +42,17 @@ module PulseAudio
                 @list = []
               end
 
+          end
+        end
+      end
+
+      module FlagsFunctions # :nodoc:
+        def self.included(base) # :nodoc:
+          base.class_eval do        
+            protected
+              def parse_flags(data, available_flags)
+                Set.new available_flags.collect{ |k,v| v if data & k != 0 }.compact
+              end
           end
         end
       end

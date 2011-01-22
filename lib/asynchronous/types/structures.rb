@@ -85,7 +85,7 @@ module PulseAudio
                  :monitor_source_name, :string,
                  :latency, Typedefs::Usec_t,
                  :driver, :string,
-                 :flags, Enums::SinkFlags,
+                 :flags, :uint32,  # uint32 instead of Enums::SinkFlags -> please see Common::FlagsFunctions::parse_flags
                  :proplist, :pointer, # FIXME pa_proplist
                  :configured_latency, Typedefs::Usec_t,
                  :base_volume, Typedefs::Volume_t,
@@ -111,7 +111,7 @@ module PulseAudio
                  :monitor_of_sink_name, :string,
                  :latency, Typedefs::Usec_t,
                  :driver, :string,
-                 :flags, Enums::SourceFlags,
+                 :flags, :uint32,  # uint32 instead of Enums::SourceFlags -> please see Common::FlagsFunctions::parse_flags
                  :proplist, :pointer, # FIXME pa_proplist
                  :configured_latency, Typedefs::Usec_t,
                  :base_volume, Typedefs::Volume_t,

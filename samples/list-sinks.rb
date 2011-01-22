@@ -12,7 +12,12 @@ pa.state_callback_proc = Proc.new{ |context, user_data|
      context.operation.sinks.all do |operation, list, user_data|
        puts "List of all sinks:"
        
-       puts list.inspect
+       list.each do |sink|
+         puts "Sink ##{sink.index}:"
+         puts "  name: #{sink.name}"
+         puts "  flags: #{sink.flags.to_a.join(" ")}"
+       end
+       
      end
    end
 }

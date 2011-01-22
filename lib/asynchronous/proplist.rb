@@ -24,18 +24,24 @@ module PulseAudio
       # Initializes new PropList.
       #
       # +initial_value+ is an optional Hash with initial keys and values.
-      def initialize(initial_value = nil)
-        @pointer = pa_proplist_new
+      def initialize(constructor = nil)
+        if constructor.is_a? FFI::Pointer
+          @pointer = constructor
         
-        if initial_value.is_a? Hash
-          initial_value.each do |key, value|
-            self[key]= value
+        else
+          @pointer = pa_proplist_new
+          
+          if constructor.is_a? Hash
+            initial_value.each do |key, value|
+              self[key]= value
+            end
           end
         end
       end
       
       # Get a string entry from the property list.
       def [](key)
+        # TODO custom module properties like module-stream-restore.id
         raise Errors::InvalidKeyError, "Specified key '#{key}' is invalid. Valid keys are #{VALID_KEYS.join(", ")}." unless VALID_KEYS.include? key
         
          pa_proplist_gets @pointer, key     
@@ -43,6 +49,7 @@ module PulseAudio
       
       # Set a string entry on the property list, possibly overwriting an already existing entry with the same key.
       def []=(key, value)
+        # TODO custom module properties like module-stream-restore.id
         raise Errors::InvalidKeyError, "Specified key '#{key}' is invalid. Valid keys are #{VALID_KEYS.join(", ")}." unless VALID_KEYS.include? key
 
         raise Errors::InvalidValueError, "Specified value '#{value}' for key '#{key}' is invalid. Valid values for this key are #{VALID_ENUM_VALUES[key].join(", ")}." unless VALID_ENUM_VALUES[key].include? value if VALID_ENUM_VALUES.has_key? key
@@ -50,10 +57,24 @@ module PulseAudio
         pa_proplist_sets @pointer, key, value.to_s
       end
       
+      # Iterate over all keys and values in the proplist
+      def each(&b) # :yields: key, value
+        
+      end
+      
+      # Checks if this proplist has key +key+
+      def has_key?(key)
+        # TODO custom module properties like module-stream-restore.id
+        raise Errors::InvalidKeyError, "Specified key '#{key}' is invalid. Valid keys are #{VALID_KEYS.join(", ")}." unless VALID_KEYS.include? key
+      
+        pa_proplist_contains(@pointer, key) == 1
+      end
+
       # Removes a single entry from the property list, identified be the specified key name.
       #
       # +key+ is a String with valid key name
       def delete!(key)
+        # TODO custom module properties like module-stream-restore.id
         raise Errors::InvalidKeyError, "Specified key '#{key}' is invalid. Valid keys are #{VALID_KEYS.join(", ")}." unless VALID_KEYS.include? key
         
         pa_proplist_unset(@pointer, key) == 0
@@ -78,6 +99,9 @@ module PulseAudio
         attach_function :pa_proplist_isempty, [ :pointer ], :int	
         attach_function :pa_proplist_unset, [ :pointer, :string ], :int
         attach_function :pa_proplist_size, [ :pointer ], :uint
+        attach_function :pa_proplist_contains, [ :pointer, :string ], :int
+
+        
     end
   end
 end
