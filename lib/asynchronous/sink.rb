@@ -8,7 +8,10 @@ module PulseAudio
 
       attr_reader :operation, :context
 
-      attr_reader :index, :name, :driver, :owner_module_index, :flags
+      attr_reader :index, :name, :description, :sample_spec, :channel_map, :volume,
+                  :mute, :monitor_source_index, :monitor_source_name, :latency, :configured_latency,
+                  :driver, :base_volume, :state, :n_volume_steps, :card_index, :n_ports,
+                  :owner_module_index, :flags, :proplist
       
       def initialize(operation, constructor) # :nodoc:
         @operation = operation
@@ -18,8 +21,24 @@ module PulseAudio
           struct = Types::Structures::SinkInfo.new constructor
           @index = struct[:index]
           @name = struct[:name]
-          @owner_module_index = struct[:owner_module]
+          @description = struct[:description]
+          @sample_spec = struct[:sample_spec]
+          @channel_map = struct[:channel_map]
+          @volume = struct[:volume]
+          @mute = struct[:mute]
+          @monitor_source_index = struct[:monitor_source]
+          @monitor_source_name = struct[:monitor_source_name]
+          @latency = struct[:latency]
+          @configured_latency = struct[:configured_latency]
           @driver = struct[:driver]
+          @base_volume = struct[:base_volume]
+          @state = struct[:state]
+          @n_volume_steps = struct[:n_volume_steps]
+          @card_index = struct[:card]
+          @n_ports = struct[:n_ports]
+#          @ports = 
+#          @active_port = 
+          @owner_module_index = struct[:owner_module]
           @flags = parse_flags struct[:flags], { 0x0001 => :hw_volume_ctrl,
                                                  0x0002 => :latency,
                                                  0x0004 => :hardware,
@@ -29,8 +48,13 @@ module PulseAudio
                                                  0x0040 => :flat_volume,
                                                  0x0080 => :dynamic_latency }
 
-#          @proplist = # TODO map to proplist structure          
+          @proplist = PropList.new struct[:proplist]
         end
+      end
+
+      # Returns true if sink is muted
+      def muted?
+        @mute == 1
       end
       
       # Return a new Sink::Operation object.

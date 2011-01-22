@@ -12,7 +12,13 @@
 <body class="standalone-code">
   <pre><span class="ruby-comment cmt"># File lib/asynchronous/proplist.rb, line 61</span>
       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">each</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">b</span>) <span class="ruby-comment cmt"># :yields: key, value</span>
+        <span class="ruby-identifier">ptr</span> = <span class="ruby-constant">FFI</span><span class="ruby-operator">::</span><span class="ruby-constant">MemoryPointer</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">:pointer</span>
         
+        <span class="ruby-keyword kw">while</span> <span class="ruby-identifier">key</span> = <span class="ruby-identifier">pa_proplist_iterate</span>(<span class="ruby-ivar">@pointer</span>, <span class="ruby-identifier">ptr</span>) <span class="ruby-keyword kw">do</span>
+          <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">key</span>, <span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">key</span>]
+        <span class="ruby-keyword kw">end</span>
+        
+        <span class="ruby-identifier">ptr</span>.<span class="ruby-identifier">free</span>
       <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

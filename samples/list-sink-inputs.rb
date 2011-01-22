@@ -27,7 +27,12 @@ pa.state_callback_proc = Proc.new{ |context, user_data|
         module: #{si.owner_module_index}
         client: #{si.client_index}
         properties:
-          END
+         END
+         
+         si.proplist.each do |k,v|
+           puts "                #{k} = \"#{v}\""
+         end
+          
        end
        
        mainloop.quit

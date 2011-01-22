@@ -13,7 +13,7 @@
   <pre><span class="ruby-comment cmt"># File lib/asynchronous/proplist.rb, line 27</span>
       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">constructor</span> = <span class="ruby-keyword kw">nil</span>)
         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">constructor</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">FFI</span><span class="ruby-operator">::</span><span class="ruby-constant">Pointer</span>
-          <span class="ruby-ivar">@pointer</span> = <span class="ruby-identifier">constructor</span>
+          <span class="ruby-ivar">@pointer</span> = <span class="ruby-identifier">pa_proplist_copy</span> <span class="ruby-identifier">constructor</span>
         
         <span class="ruby-keyword kw">else</span>
           <span class="ruby-ivar">@pointer</span> = <span class="ruby-identifier">pa_proplist_new</span>
