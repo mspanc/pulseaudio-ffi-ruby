@@ -5,26 +5,54 @@
 
 <html>
 <head>
-  <title>state_callback_proc= (PulseAudio::Asynchronous::Context)</title>
+  <title>subscribe_callback_proc= (PulseAudio::Asynchronous::Context)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/asynchronous/context.rb, line 127</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">state_callback_proc=</span>(<span class="ruby-identifier">proc</span>)
-        <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@state_callback_handler</span>
-          <span class="ruby-ivar">@state_callback_handler</span> = <span class="ruby-constant">Proc</span>.<span class="ruby-identifier">new</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">context</span>, <span class="ruby-identifier">user_data</span><span class="ruby-operator">|</span> 
-            <span class="ruby-ivar">@state_callback_proc</span>.<span class="ruby-identifier">call</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-ivar">@state_callback_user_data</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@state_callback_proc</span>
+  <pre><span class="ruby-comment cmt"># File lib/asynchronous/context.rb, line 51</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">subscribe_callback_proc=</span>(<span class="ruby-identifier">proc</span>)
+        <span class="ruby-keyword kw">unless</span> <span class="ruby-ivar">@subscribe_callback_handler</span>
+          <span class="ruby-ivar">@subscribe_callback_handler</span> = <span class="ruby-constant">Proc</span>.<span class="ruby-identifier">new</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">context</span>, <span class="ruby-identifier">event_type</span>, <span class="ruby-identifier">index</span>, <span class="ruby-identifier">user_data</span><span class="ruby-operator">|</span> 
+            <span class="ruby-comment cmt"># Needs workaround and manual resolution, because PA API specifies</span>
+            <span class="ruby-comment cmt"># the same values 0x0000 etc. for multiple identifiers in </span>
+            <span class="ruby-comment cmt"># Types::Enums::SubscriptionEventType so FFI resolution mechanism </span>
+            <span class="ruby-comment cmt"># is always getting the last value.</span>
+            <span class="ruby-comment cmt">#</span>
+            <span class="ruby-comment cmt"># Of course this should be Enum in normal case.</span>
+
+            <span class="ruby-identifier">facilities</span> = { <span class="ruby-value">0x0000</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">:sink</span>,
+                           <span class="ruby-value">0x0001</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">:source</span>,
+                           <span class="ruby-value">0x0002</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">:sink_input</span>,
+                           <span class="ruby-value">0x0003</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">:source_output</span>,
+                           <span class="ruby-value">0x0004</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">:module</span>,
+                           <span class="ruby-value">0x0005</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">:client</span>,
+                           <span class="ruby-value">0x0006</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">:sample_cache</span>,
+                           <span class="ruby-value">0x0007</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">:server</span>,
+                           <span class="ruby-value">0x0008</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">:autoload</span>,
+                           <span class="ruby-value">0x0009</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">:card</span> }
+                           
+            <span class="ruby-identifier">types</span> = { <span class="ruby-value">0x0000</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">:new</span>,
+                      <span class="ruby-value">0x0010</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">:change</span>,
+                      <span class="ruby-value">0x0020</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">:remove</span> }
+                            
+            <span class="ruby-identifier">facility_mask</span> = <span class="ruby-value">0x000</span><span class="ruby-constant">F</span>
+            <span class="ruby-identifier">type_mask</span> = <span class="ruby-value">0x0030</span>
+                                           
+            <span class="ruby-identifier">facility</span> = <span class="ruby-identifier">facilities</span>[<span class="ruby-identifier">event_type</span> <span class="ruby-operator">&amp;</span> <span class="ruby-identifier">facility_mask</span>]
+            <span class="ruby-identifier">type</span> = <span class="ruby-identifier">types</span>[<span class="ruby-identifier">event_type</span> <span class="ruby-operator">&amp;</span> <span class="ruby-identifier">type_mask</span>]
+
+            <span class="ruby-ivar">@subscribe_callback_proc</span>.<span class="ruby-identifier">call</span>(<span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">facility</span>, <span class="ruby-identifier">type</span>, <span class="ruby-identifier">index</span>, <span class="ruby-ivar">@subscribe_callback_user_data</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@subscribe_callback_proc</span>
           }
         <span class="ruby-keyword kw">end</span>
         
         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">proc</span>.<span class="ruby-identifier">nil?</span>
-          <span class="ruby-identifier">pa_context_set_state_callback</span> <span class="ruby-ivar">@context</span>, <span class="ruby-keyword kw">nil</span>, <span class="ruby-keyword kw">nil</span>      
+          <span class="ruby-identifier">pa_context_set_subscribe_callback</span> <span class="ruby-ivar">@context</span>, <span class="ruby-keyword kw">nil</span>, <span class="ruby-keyword kw">nil</span>      
         <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">proc</span>.<span class="ruby-identifier">respond_to?</span> <span class="ruby-identifier">:call</span>
-          <span class="ruby-ivar">@state_callback_proc</span> = <span class="ruby-identifier">proc</span>
-          <span class="ruby-identifier">pa_context_set_state_callback</span> <span class="ruby-ivar">@context</span>, <span class="ruby-ivar">@state_callback_handler</span>, <span class="ruby-keyword kw">nil</span>      
+          <span class="ruby-ivar">@subscribe_callback_proc</span> = <span class="ruby-identifier">proc</span>
+          <span class="ruby-identifier">pa_context_set_subscribe_callback</span> <span class="ruby-ivar">@context</span>, <span class="ruby-ivar">@subscribe_callback_handler</span>, <span class="ruby-keyword kw">nil</span>
         <span class="ruby-keyword kw">else</span>
-          <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-value str">&quot;You mast pass a Proc or lambda to state_callback_proc=&quot;</span>
+          <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-value str">&quot;You mast pass a Proc or lambda to subscribe_callback_proc=&quot;</span>
         <span class="ruby-keyword kw">end</span>
       <span class="ruby-keyword kw">end</span></pre>
 </body>

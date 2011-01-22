@@ -33,6 +33,12 @@ module PulseAudio
                  :description, :string,
                  :priority, :uint32
         end
+
+        class SourcePortInfo < ::FFI::Struct
+          layout :name, :string,
+                 :description, :string,
+                 :priority, :uint32
+        end
         
         class SinkInputInfo < ::FFI::Struct
           layout :index, :uint32,
@@ -50,6 +56,21 @@ module PulseAudio
                  :mute, :int,
                  :proplist, :pointer # FIXME to proplist
         end
+        
+        class SourceOutputInfo < ::FFI::Struct
+          layout :index, :uint32,
+                 :name, :string,
+                 :owner_module, :uint32,
+                 :client, :uint32,
+                 :source, :uint32, 
+                 :sample_spec, SampleSpec,
+                 :channel_map, ChannelMap,
+                 :buffer_usec, Typedefs::Usec_t,
+                 :source_usec, Typedefs::Usec_t,
+                 :resample_method, :string,
+                 :driver, :string,
+                 :proplist, :pointer # FIXME to proplist
+        end        
                 
         class SinkInfo < ::FFI::Struct
           layout :name, :string,
@@ -76,6 +97,32 @@ module PulseAudio
                  :active_port, SinkPortInfo
                  
         end
+        
+        class SourceInfo < ::FFI::Struct
+          layout :name, :string,
+                 :index, :uint32,
+                 :description, :string,
+                 :sample_spec, SampleSpec,
+                 :channel_map, ChannelMap,
+                 :owner_module, :uint32,
+                 :volume, CVolume,
+                 :mute, :int,
+                 :monitor_of_sink, :uint32,
+                 :monitor_of_sink_name, :string,
+                 :latency, Typedefs::Usec_t,
+                 :driver, :string,
+                 :flags, Enums::SourceFlags,
+                 :proplist, :pointer, # FIXME pa_proplist
+                 :configured_latency, Typedefs::Usec_t,
+                 :base_volume, Typedefs::Volume_t,
+                 :state, Enums::SourceState,
+                 :n_volume_steps, :uint32,
+                 :card, :uint32,
+                 :n_ports, :uint32,
+                 :ports, :pointer, # FIXME array of SinkPortInfo
+                 :active_port, SourcePortInfo
+                 
+        end        
                 
         class ModuleInfo < ::FFI::Struct
           layout :index, :uint32,

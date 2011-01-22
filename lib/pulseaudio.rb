@@ -72,6 +72,12 @@ require File.join(load_dir, 'asynchronous/operation/sink')
 require File.join(load_dir, 'asynchronous/sink-input')
 require File.join(load_dir, 'asynchronous/operation/sink-input')
 
+require File.join(load_dir, 'asynchronous/source')
+require File.join(load_dir, 'asynchronous/operation/source')
+
+require File.join(load_dir, 'asynchronous/source-output')
+require File.join(load_dir, 'asynchronous/operation/source-output')
+
 require File.join(load_dir, 'asynchronous/module')
 require File.join(load_dir, 'asynchronous/operation/module')
 

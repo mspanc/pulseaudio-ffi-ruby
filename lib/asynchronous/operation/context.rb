@@ -49,6 +49,18 @@ module PulseAudio
           SinkInputs.new self
         end
 
+        # Returns PulseAudio::Asynchronous::Sources object, which can be used to query information
+        # about available sources.
+        def sources
+          Sources.new self
+        end
+        
+        # Returns PulseAudio::Asynchronous::SourceOutputs object, which can be used to query information
+        # about available source outputs.
+        def source_outputs
+          SourceOutputs.new self
+        end        
+
         # Returns PulseAudio::Asynchronous::Modules object, which can be used to query information
         # about available sink inputs.
         def modules

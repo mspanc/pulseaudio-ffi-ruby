@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>unsubscribe! (PulseAudio::Asynchronous::Context::Operation)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/asynchronous/operation/context.rb, line 100</span>
+        <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">unsubscribe!</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">b</span>) <span class="ruby-comment cmt"># :yields: operation, success, user_data</span>
+          <span class="ruby-identifier">initialize_success_callback_handler</span>              
+          <span class="ruby-ivar">@block</span> = <span class="ruby-identifier">b</span>
+
+          <span class="ruby-identifier">pa_context_subscribe</span> <span class="ruby-ivar">@parent</span>.<span class="ruby-identifier">pointer</span>, <span class="ruby-constant">Types</span><span class="ruby-operator">::</span><span class="ruby-constant">Enums</span><span class="ruby-operator">::</span><span class="ruby-constant">SubscriptionMask</span>[<span class="ruby-identifier">:null</span>], <span class="ruby-ivar">@success_callback_handler</span>, <span class="ruby-keyword kw">nil</span>
+        <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

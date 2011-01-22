@@ -91,6 +91,15 @@ module PulseAudio
                                        :done,
                                        :cancelled ]
                                 
+        SourceFlags =           enum [ :noflags,
+                                       :hw_volume_ctrl,
+                                       :latency,
+                                       :hardware,
+                                       :network,
+                                       :hw_mute_ctrl,
+                                       :decibel_volume,
+                                       :dynamic_latency ]
+
         SinkFlags =             enum [ :noflags,
                                        :hw_volume_ctrl,
                                        :latency,
@@ -101,6 +110,11 @@ module PulseAudio
                                        :flat_volume,
                                        :dynamic_latency ]
                            
+        SourceState =           enum [ :invalid,
+                                       :running,
+                                       :idle,
+                                       :suspended ]
+                  
         SinkState =             enum [ :invalid,
                                        :running,
                                        :idle,

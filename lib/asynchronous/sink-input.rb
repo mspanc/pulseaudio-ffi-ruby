@@ -6,7 +6,7 @@ module PulseAudio
 
       attr_reader :operation, :context
 
-      attr_reader :index, :name, :driver
+      attr_reader :index, :name, :driver, :owner_module_index
       
       def initialize(operation, constructor) # :nodoc:
         @operation = operation
@@ -16,7 +16,7 @@ module PulseAudio
           struct = Types::Structures::SinkInputInfo.new constructor
           @index = struct[:index]
           @name = struct[:name]
-#          @owner_module = struct[:name] # TODO - map to Module class
+          @owner_module_index = struct[:owner_module]
           @driver = struct[:driver]
 #          @proplist = # TODO map to proplist structure          
         end
