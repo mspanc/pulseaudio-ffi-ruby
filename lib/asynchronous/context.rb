@@ -1,6 +1,6 @@
 module PulseAudio
   module Asynchronous
-    class Context
+    class Context < DaemonObject
       extend FFI::Library
       ffi_lib LIB_PA
       
@@ -38,13 +38,48 @@ module PulseAudio
 
       # Set the context specific call back function that is called whenever the state of the daemon changes.
       #
-      # +proc+ is as Proc object or lambda that accepts four arguments: context, event_type, index, user_data
+      # +proc+ is as Proc object or lambda that accepts four arguments: context, facility, event_type, index, user_data
+      #
+      # Parameters passed to +proc+ are:
+      # +context+ - context used to read the subscribtion message
+      # +facility+ - one of :sink, :source, :sink_input, :source_output, :module, :client, :sample_cache, :server, :autoload, :card
+      # +event_type+ - one of :new, :change, :remove
+      # +index+ - PulseAudio object's index that causes subscribtion
+      # +user_data+ - user data passed to subscribe_callback_user_data= of the active context
       #
       # If you want to pass any user data to this callback, use Context#event_callback_user_data=
       def subscribe_callback_proc=(proc)
         unless @subscribe_callback_handler
           @subscribe_callback_handler = Proc.new{|context, event_type, index, user_data| 
-            @subscribe_callback_proc.call(self, event_type, index, @subscribe_callback_user_data) if @subscribe_callback_proc
+            # Needs workaround and manual resolution, because PA API specifies
+            # the same values 0x0000 etc. for multiple identifiers in 
+            # Types::Enums::SubscriptionEventType so FFI resolution mechanism 
+            # is always getting the last value.
+            #
+            # Of course this should be Enum in normal case.
+
+            facilities = { 0x0000 => :sink,
+                           0x0001 => :source,
+                           0x0002 => :sink_input,
+                           0x0003 => :source_output,
+                           0x0004 => :module,
+                           0x0005 => :client,
+                           0x0006 => :sample_cache,
+                           0x0007 => :server,
+                           0x0008 => :autoload,
+                           0x0009 => :card }
+                           
+            types = { 0x0000 => :new,
+                      0x0010 => :change,
+                      0x0020 => :remove }
+                            
+            facility_mask = 0x000F
+            type_mask = 0x0030
+                                           
+            facility = facilities[event_type & facility_mask]
+            type = types[event_type & type_mask]
+
+            @subscribe_callback_proc.call(self, facility, type, index, @subscribe_callback_user_data) if @subscribe_callback_proc
           }
         end
         
@@ -175,7 +210,9 @@ module PulseAudio
         include Common::Callbacks
         callback :pa_context_notify_cb_t, [ :pointer, :pointer ], :void
         callback :pa_context_event_cb_t, [ :pointer, :string, :pointer, :pointer ], :void # FIXME pointer as 3rd arg -> Proplist Type
-        callback :pa_context_subscribe_cb_t, [ :pointer, Types::Enums::SubscriptionEventType, :uint32, :pointer ], :void
+        callback :pa_context_subscribe_cb_t, [ :pointer, :uint32, :uint32, :pointer ], :void # Required to use uint32 instead of Types::Enums::SubscriptionEventType
+                                                                                             # because passed value can be bigger than enum range. Exact event type
+                                                                                             # etc. is extracted using binary AND - please look in the callback code.
 
         attach_function :pa_context_new, [ :pointer, :string ], :pointer
         attach_function :pa_context_new_with_proplist, [ :pointer, :string, :pointer ], :pointer

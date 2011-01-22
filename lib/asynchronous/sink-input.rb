@@ -1,6 +1,6 @@
 module PulseAudio
   module Asynchronous
-    class SinkInput
+    class SinkInput < DaemonObject
       extend FFI::Library
       ffi_lib LIB_PA
 

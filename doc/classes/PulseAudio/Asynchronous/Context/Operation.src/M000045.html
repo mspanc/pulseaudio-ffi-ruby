@@ -5,20 +5,14 @@
 
 <html>
 <head>
-  <title>subscribe! (PulseAudio::Asynchronous::Context::Operation)</title>
+  <title>modules (PulseAudio::Asynchronous::Context::Operation)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../../../../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/asynchronous/operation/context.rb, line 61</span>
-        <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">subscribe!</span>(<span class="ruby-identifier">subscription_mask</span> = <span class="ruby-identifier">:all</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">b</span>) <span class="ruby-comment cmt"># :yields: operation, success, user_data</span>
-          <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-value str">&quot;subscription_mask must be one of :null, :sink, :source, :sink_input, :source_output, :module, :client, :sample_cache, :server, :card, :all&quot;</span> <span class="ruby-keyword kw">unless</span> [ <span class="ruby-identifier">:null</span>, <span class="ruby-identifier">:sink</span>, <span class="ruby-identifier">:source</span>, <span class="ruby-identifier">:sink_input</span>, <span class="ruby-identifier">:source_output</span>, <span class="ruby-identifier">:module</span>, <span class="ruby-identifier">:client</span>, <span class="ruby-identifier">:sample_cache</span>, <span class="ruby-identifier">:server</span>, <span class="ruby-identifier">:card</span>, <span class="ruby-identifier">:all</span> ].<span class="ruby-identifier">include?</span> <span class="ruby-identifier">subscription_mask</span>
-
-          <span class="ruby-identifier">initialize_success_callback_handler</span>              
-          <span class="ruby-ivar">@block</span> = <span class="ruby-identifier">b</span>
-
-          <span class="ruby-comment cmt"># FIXME why FFI needs explicit conversion like Types::Enums::SubscriptionMask[subscription_mask]? Shouldn't it automatically recognize that this parameters is enum and convert symbol to integer?</span>
-          <span class="ruby-identifier">pa_context_subscribe</span> <span class="ruby-ivar">@parent</span>.<span class="ruby-identifier">pointer</span>, <span class="ruby-constant">Types</span><span class="ruby-operator">::</span><span class="ruby-constant">Enums</span><span class="ruby-operator">::</span><span class="ruby-constant">SubscriptionMask</span>[<span class="ruby-identifier">subscription_mask</span>], <span class="ruby-ivar">@success_callback_handler</span>, <span class="ruby-keyword kw">nil</span>
+  <pre><span class="ruby-comment cmt"># File lib/asynchronous/operation/context.rb, line 54</span>
+        <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">modules</span>
+          <span class="ruby-constant">Modules</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword kw">self</span>
         <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

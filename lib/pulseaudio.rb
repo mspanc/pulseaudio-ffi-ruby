@@ -56,6 +56,7 @@ require File.join(load_dir, 'asynchronous/types/enums')
 require File.join(load_dir, 'asynchronous/types/structures')
 require File.join(load_dir, 'asynchronous/mainloop/glib')
 require File.join(load_dir, 'asynchronous/operation')
+require File.join(load_dir, 'asynchronous/daemon-object')
 
 require File.join(load_dir, 'asynchronous/proplist')
 

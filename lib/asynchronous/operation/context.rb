@@ -19,7 +19,7 @@ module PulseAudio
         # The returned operation is unlikely to complete succesfully, since the daemon probably
         # died before returning a success notification.
         #
-        # TODO FIXME missing block!
+        # TODO FIXME missing    block!
         def exit_daemon!
           initialize_success_callback_handler
           @pointer = pa_context_exit_daemon @parent.pointer, @success_callback_handler, nil
@@ -57,16 +57,40 @@ module PulseAudio
         
         # Enable event notification.
         #
-        # +subscription_mask+ must be one of :null, :sink, :source, :sink_input, :source_output, :module, :client, :sample_cache, :server, :card, :all (default is :all)
+        # +subscription_mask+ must be one of :null, :sink, :source, :sink_input, :source_output, :module, :client, :sample_cache, :server, :card, :all
+        # or an array containing combination of these items. Default is :all.
         def subscribe!(subscription_mask = :all, &b) # :yields: operation, success, user_data
-          raise ArgumentError, "subscription_mask must be one of :null, :sink, :source, :sink_input, :source_output, :module, :client, :sample_cache, :server, :card, :all" unless [ :null, :sink, :source, :sink_input, :source_output, :module, :client, :sample_cache, :server, :card, :all ].include? subscription_mask
+          if subscription_mask.is_a? Array
+            mask = subscription_mask.collect{ |x| x if [ :null, :sink, :source, :sink_input, :source_output, :module, :client, :sample_cache, :server, :card, :all ].include? x }.compact.uniq
 
+            raise ArgumentError, "You've passed an Array to subscription_mask, so it has to contain at least one of the following symbols: :null, :sink, :source, :sink_input, :source_output, :module, :client, :sample_cache, :server, :card, :all" if mask.size == 0
+            
+            mask = mask.inject(0) { |memo, obj| memo | Types::Enums::SubscriptionMask[obj] }
+            
+          elsif subscription_mask.is_a? Symbol
+            raise ArgumentError, "You've passed a Symbol to subscription_mask, so it must be one of :null, :sink, :source, :sink_input, :source_output, :module, :client, :sample_cache, :server, :card, :all" unless [ :null, :sink, :source, :sink_input, :source_output, :module, :client, :sample_cache, :server, :card, :all ].include? subscription_mask
+
+            mask = Types::Enums::SubscriptionMask[subscription_mask]
+
+          else
+            raise ArgumentError, "subscription_mask must be one of :null, :sink, :source, :sink_input, :source_output, :module, :client, :sample_cache, :server, :card, :all or an array containing combination of these items" if mask.size == 0
+          end
+          
           initialize_success_callback_handler              
           @block = b
 
-          # FIXME why FFI needs explicit conversion like Types::Enums::SubscriptionMask[subscription_mask]? Shouldn't it automatically recognize that this parameters is enum and convert symbol to integer?
-          pa_context_subscribe @parent.pointer, Types::Enums::SubscriptionMask[subscription_mask], @success_callback_handler, nil
+          pa_context_subscribe @parent.pointer, mask, @success_callback_handler, nil
         end
+        
+        # Disable event notification.
+        #
+        # Equal to subscribe!(:null)
+        def unsubscribe!(&b) # :yields: operation, success, user_data
+          initialize_success_callback_handler              
+          @block = b
+
+          pa_context_subscribe @parent.pointer, Types::Enums::SubscriptionMask[:null], @success_callback_handler, nil
+        end        
 
         protected
           include Common::Callbacks

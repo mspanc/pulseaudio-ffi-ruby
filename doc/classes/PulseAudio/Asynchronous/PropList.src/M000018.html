@@ -5,16 +5,20 @@
 
 <html>
 <head>
-  <title>[] (PulseAudio::Asynchronous::PropList)</title>
+  <title>new (PulseAudio::Asynchronous::PropList)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/asynchronous/proplist.rb, line 38</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-operator">[]</span>(<span class="ruby-identifier">key</span>)
-        <span class="ruby-identifier">raise</span> <span class="ruby-constant">Errors</span><span class="ruby-operator">::</span><span class="ruby-constant">InvalidKeyError</span>, <span class="ruby-node">&quot;Specified key '#{key}' is invalid. Valid keys are #{VALID_KEYS.join(&quot;, &quot;)}.&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">VALID_KEYS</span>.<span class="ruby-identifier">include?</span> <span class="ruby-identifier">key</span>
+  <pre><span class="ruby-comment cmt"># File lib/asynchronous/proplist.rb, line 27</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">initial_value</span> = <span class="ruby-keyword kw">nil</span>)
+        <span class="ruby-ivar">@pointer</span> = <span class="ruby-identifier">pa_proplist_new</span>
         
-         <span class="ruby-identifier">pa_proplist_gets</span> <span class="ruby-ivar">@pointer</span>, <span class="ruby-identifier">key</span>     
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">initial_value</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">Hash</span>
+          <span class="ruby-identifier">initial_value</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span><span class="ruby-operator">|</span>
+            <span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">key</span>]= <span class="ruby-identifier">value</span>
+          <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">end</span>
       <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

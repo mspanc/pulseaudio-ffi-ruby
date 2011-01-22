@@ -1,6 +1,6 @@
 module PulseAudio
   module Asynchronous
-    class Client
+    class Client < DaemonObject
       extend FFI::Library
       ffi_lib LIB_PA
 

@@ -105,33 +105,24 @@ module PulseAudio
                                        :running,
                                        :idle,
                                        :suspended ]
-                           
-        SubscriptionEventType = enum [ :sink,
-                                       :source,
-                                       :sink_input,
-                                       :source_output,
-                                       :module,
-                                       :client,
-                                       :sample_cache,
-                                       :server,
-                                       :card,
-                                       :facility_mask,
-                                       :new,
-                                       :change,
-                                       :remove,
-                                       :type_mask ]
+                  
+                  
+
                                        
-        SubscriptionMask =      enum [ :null,
-                                       :sink,
-                                       :source,
-                                       :sink_input,
-                                       :source_output,
-                                       :module,
-                                       :client,
-                                       :sample_cache,
-                                       :server,
-                                       :card,
-                                       :all ]
+                                       
+        SubscriptionMask =      enum [ :null,          0x0000,
+                                       :sink,          0x0001,
+                                       :source,        0x0002,
+                                       :sink_input,    0x0004,
+                                       :source_output, 0x0008,
+                                       :module,        0x0010,
+                                       :client,        0x0020,
+                                       :sample_cache,  0x0040,
+                                       :server,        0x0080,
+                                       :autoload,      0x0100,
+                                       :card,          0x0200,
+                                       :all,           0x02ff ]
+
       end
     end
   end
