@@ -13,6 +13,15 @@ module PulseAudio
           pa_context_set_default_sink @parent.context.pointer, @parent.name, @success_callback_handler, nil          
         end
 
+        # Find Module that is owner of this sink.
+        def module(&b) # :yields: operation, module, user_data 
+          raise ArgumentError, "You must pass a block to this function." unless block_given?
+          
+          @parent.context.operation.modules.find @parent.owner_module_index do |operation, mod, user_data|
+            b.call operation, mod, user_data
+          end
+        end
+
         protected
           include Common::Callbacks
           

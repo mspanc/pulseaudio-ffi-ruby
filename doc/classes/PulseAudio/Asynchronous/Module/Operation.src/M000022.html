@@ -12,7 +12,9 @@
 <body class="standalone-code">
   <pre><span class="ruby-comment cmt"># File lib/asynchronous/operation/module.rb, line 17</span>
         <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">sink</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">b</span>) <span class="ruby-comment cmt"># :yields: operation, sink, user_data </span>
-          <span class="ruby-comment cmt"># TODO</span>
+          <span class="ruby-ivar">@parent</span>.<span class="ruby-identifier">context</span>.<span class="ruby-identifier">operation</span>.<span class="ruby-identifier">sinks</span>.<span class="ruby-identifier">all</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">operation</span>, <span class="ruby-identifier">list</span>, <span class="ruby-identifier">user_data</span><span class="ruby-operator">|</span>
+            <span class="ruby-identifier">b</span>.<span class="ruby-identifier">call</span> <span class="ruby-identifier">operation</span>, <span class="ruby-identifier">list</span>.<span class="ruby-identifier">detect</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">x</span>.<span class="ruby-identifier">owner_module_index</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@parent</span>.<span class="ruby-identifier">index</span> }, <span class="ruby-identifier">user_data</span>
+          <span class="ruby-keyword kw">end</span>
         <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

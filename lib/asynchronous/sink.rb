@@ -107,9 +107,49 @@ module PulseAudio
       end
 
 
+      # Get particular sink connected to the PulseAudio server identified by its index or name.
+      #
+      # +seek+ is a Fixnum (if you seek by client's ID) or String (if you seek by client's name).
+      #
+      # Block passed to the function will be called when asynchronous query operation finishes.
+      # Parameters passed to the block are:
+      #
+      # +operation+ is an Operation object used to perform the query.
+      #
+      # +sink+ is PulseAudio::Asynchronous::Sink found with the query.
+      #
+      # +user_data+ is an object passed to Operation object constructor or nil.
+      def find(seek, &b) # :yields: operation, sink, user_data
+        @block = b
+
+        case seek
+          when Fixnum
+            initialize_sink_info_callback_handler
+            pa_context_get_sink_info_by_index @operation.parent.pointer, seek, @sink_info_callback_handler, nil
+          
+          when String
+            initialize_sink_info_callback_handler
+            pa_context_get_sink_info_by_name @operation.parent.pointer, seek, @sink_info_callback_handler, nil
+            
+          else
+            raise ArgumentError, "Argument passed to PulseAudio::Asynchronous::Sinks::find has to be Fixnum or String"
+        end
+      end
+
       protected
         callback :pa_sink_info_cb_t, [ :pointer, ::PulseAudio::Asynchronous::Types::Structures::SinkInfo, :int, :pointer ], :void
         attach_function :pa_context_get_sink_info_list, [ :pointer, :pa_sink_info_cb_t, :pointer ], :pointer
+        attach_function :pa_context_get_sink_info_by_index, [ :pointer, :uint32, :pa_sink_info_cb_t, :pointer ], :pointer
+        attach_function :pa_context_get_sink_info_by_name, [ :pointer, :string, :pa_sink_info_cb_t, :pointer ], :pointer
+        
+        def initialize_sink_info_callback_handler # :nodoc:
+          unless @sink_info_callback_handler
+            @sink_info_callback_handler = Proc.new{ |context, sink_info, eol, user_data| 
+              sink = sink_info.null? ? nil : Sink.new(@operation, sink_info)
+              callback.call(@operation, sink, @operation.user_data) if callback unless eol == 1
+            }
+          end
+        end  
         
         def initialize_sink_info_list_callback_handler # :nodoc:
           initialize_list

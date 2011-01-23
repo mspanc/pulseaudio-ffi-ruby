@@ -35,6 +35,14 @@ module PulseAudio
           pa_context_set_sink_input_mute @parent.context.pointer, @parent.index, muted == true ? 1 : 0, @success_callback_handler, nil
         end
 
+        # Find Sink that acts as an output for this sink input.
+        def sink(&b) # :yields: operation, module, user_data 
+          raise ArgumentError, "You must pass a block to this function." unless block_given?
+
+          @parent.context.operation.sinks.find @parent.sink_index do |operation, sink, user_data|
+            b.call operation, sink, user_data
+          end
+        end
 
         protected
           include Common::Callbacks

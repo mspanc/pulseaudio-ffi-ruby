@@ -88,6 +88,7 @@
       <div class="name-list">
       <a href="#M000008">move_to_sink!</a>&nbsp;&nbsp;
       <a href="#M000009">muted=</a>&nbsp;&nbsp;
+      <a href="#M000010">sink</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -128,11 +129,13 @@
       
         <div class="method-description">
           <p>
-Move the specified sink input to a different sink.
+Move the specified <a href="Operation.html#M000010">sink</a> input to a
+different <a href="Operation.html#M000010">sink</a>.
 </p>
 <p>
-<tt>sink</tt> is Fixnum, String or <a href="../Sink.html">Sink</a> -
-depends whether you want to identify sink by its index, name or just pass
+<tt><a href="Operation.html#M000010">sink</a></tt> is Fixnum, String or <a
+href="../Sink.html">Sink</a> - depends whether you want to identify <a
+href="Operation.html#M000010">sink</a> by its index, name or just pass
 existing <a href="../Sink.html">Sink</a> object (which internally results
 in identyfying via its index, but gives clearer syntax in certain cases)
 </p>
@@ -151,10 +154,29 @@ in identyfying via its index, but gives clearer syntax in certain cases)
       
         <div class="method-description">
           <p>
-Set the mute switch of a sink input stream.
+Set the mute switch of a <a href="Operation.html#M000010">sink</a> input
+stream.
 </p>
 <p>
 <tt>muted</tt> is boolean value
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000010" class="method-detail">
+        <a name="M000010"></a>
+
+        <div class="method-heading">
+          <a href="Operation.src/M000010.html" target="Code" class="method-signature"
+            onclick="popupCode('Operation.src/M000010.html');return false;">
+          <span class="method-name">sink</span><span class="method-args">() {|operation, module, user_data| ...}</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Find <a href="../Sink.html">Sink</a> that acts as an output for this <a
+href="Operation.html#M000010">sink</a> input.
 </p>
         </div>
       </div>

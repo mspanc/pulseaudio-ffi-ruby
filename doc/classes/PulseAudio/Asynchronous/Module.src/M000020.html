@@ -5,14 +5,16 @@
 
 <html>
 <head>
-  <title>operation (PulseAudio::Asynchronous::Module)</title>
+  <title>construct_from_pointer (PulseAudio::Asynchronous::Module)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/asynchronous/module.rb, line 37</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">operation</span>(<span class="ruby-identifier">options</span> = <span class="ruby-keyword kw">nil</span>)
-        <span class="ruby-constant">Operation</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword kw">self</span>, <span class="ruby-identifier">options</span>
-      <span class="ruby-keyword kw">end</span></pre>
+  <pre><span class="ruby-comment cmt"># File lib/asynchronous/module.rb, line 40</span>
+        <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">construct_from_pointer</span>(<span class="ruby-identifier">constructor</span>)
+
+          
+          <span class="ruby-ivar">@loaded</span> = <span class="ruby-keyword kw">true</span>
+        <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

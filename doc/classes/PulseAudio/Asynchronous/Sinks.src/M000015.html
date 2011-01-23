@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>find (PulseAudio::Asynchronous::Sinks)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/asynchronous/sink.rb, line 122</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">find</span>(<span class="ruby-identifier">seek</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">b</span>) <span class="ruby-comment cmt"># :yields: operation, sink, user_data</span>
+        <span class="ruby-ivar">@block</span> = <span class="ruby-identifier">b</span>
+
+        <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">seek</span>
+          <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Fixnum</span>
+            <span class="ruby-identifier">initialize_sink_info_callback_handler</span>
+            <span class="ruby-identifier">pa_context_get_sink_info_by_index</span> <span class="ruby-ivar">@operation</span>.<span class="ruby-identifier">parent</span>.<span class="ruby-identifier">pointer</span>, <span class="ruby-identifier">seek</span>, <span class="ruby-ivar">@sink_info_callback_handler</span>, <span class="ruby-keyword kw">nil</span>
+          
+          <span class="ruby-keyword kw">when</span> <span class="ruby-constant">String</span>
+            <span class="ruby-identifier">initialize_sink_info_callback_handler</span>
+            <span class="ruby-identifier">pa_context_get_sink_info_by_name</span> <span class="ruby-ivar">@operation</span>.<span class="ruby-identifier">parent</span>.<span class="ruby-identifier">pointer</span>, <span class="ruby-identifier">seek</span>, <span class="ruby-ivar">@sink_info_callback_handler</span>, <span class="ruby-keyword kw">nil</span>
+            
+          <span class="ruby-keyword kw">else</span>
+            <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-value str">&quot;Argument passed to PulseAudio::Asynchronous::Sinks::find has to be Fixnum or String&quot;</span>
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>
