@@ -97,7 +97,7 @@ module PulseAudio
             pa_context_get_client_info_list @operation.parent.pointer, @client_info_list_name_seek_callback_handler, nil
             
           else
-            raise ArgumentError, "Argument passed to PulseAudio::Asynchronous::Clients::[] has to be Fixnum or String"
+            raise ArgumentError, "Argument passed to PulseAudio::Asynchronous::Clients::find has to be Fixnum or String"
         end
       end
 

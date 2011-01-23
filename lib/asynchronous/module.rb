@@ -6,7 +6,7 @@ module PulseAudio
 
       attr_reader :operation, :context
 
-      attr_reader :index, :name, :argument, :n_used
+      attr_reader :index, :name, :argument, :n_used, :proplist
       
       def initialize(operation, constructor) # :nodoc:
         @operation = operation
@@ -17,6 +17,8 @@ module PulseAudio
             struct = Types::Structures::ModuleInfo.new constructor
             @index = struct[:index]
             @name = struct[:name]
+            @n_used = struct[:n_used]
+            @proplist = PropList.new struct[:proplist]
             
             @loaded = true # FIXME TODO add preloading
             

@@ -87,6 +87,7 @@
 
       <div class="name-list">
       <a href="#M000059">all</a>&nbsp;&nbsp;
+      <a href="#M000060">find</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -156,6 +157,44 @@ to perform the query.
 <tt>list</tt> is an array of <a
 href="SinkInputs.html">PulseAudio::Asynchronous::SinkInputs</a> objects
 found with the query.
+</p>
+<p>
+<tt>user_data</tt> is an object passed to <a
+href="Operation.html">Operation</a> object constructor or nil.
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000060" class="method-detail">
+        <a name="M000060"></a>
+
+        <div class="method-heading">
+          <a href="SinkInputs.src/M000060.html" target="Code" class="method-signature"
+            onclick="popupCode('SinkInputs.src/M000060.html');return false;">
+          <span class="method-name">find</span><span class="method-args">(seek) {|operation, sink_input, user_data| ...}</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Get particular sink-input connected to the <a
+href="../../PulseAudio.html">PulseAudio</a> server identified by its index.
+</p>
+<p>
+<tt>seek</tt> is a Fixnum containing sink input&#8216;s ID.
+</p>
+<p>
+Block passed to the function will be called when asynchronous query
+operation finishes. Parameters passed to the block are:
+</p>
+<p>
+<tt>operation</tt> is an <a href="Operation.html">Operation</a> object used
+to perform the query.
+</p>
+<p>
+<tt>sink_input</tt> is <a
+href="SinkInput.html">PulseAudio::Asynchronous::SinkInput</a> found with
+the query.
 </p>
 <p>
 <tt>user_data</tt> is an object passed to <a
