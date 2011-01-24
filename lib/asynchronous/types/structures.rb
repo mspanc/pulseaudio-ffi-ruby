@@ -1,8 +1,8 @@
 module PulseAudio
   module Asynchronous
-    module Types
-      module Structures
-        class ClientInfo < ::FFI::Struct
+    module Types # :nodoc:
+      module Structures # :nodoc:
+        class ClientInfo < ::FFI::Struct # :nodoc:
           layout :index, :uint32, 
                  :name, :string,
                  :owner_module, :uint32,
@@ -11,36 +11,36 @@ module PulseAudio
                  
         end
         
-        class CVolume < ::FFI::Struct
+        class CVolume < ::FFI::Struct # :nodoc:
           layout :channels, :uint8,
                  :values, [ Typedefs::Volume_t, ::PulseAudio::CHANNELS_MAX ]
         end
 
-        class SampleSpec < ::FFI::Struct
+        class SampleSpec < ::FFI::Struct # :nodoc:
           layout :format, Enums::Format,
                  :rate, :uint32,
                  :channels, :uint8
         end
         
-        class ChannelMap < ::FFI::Struct
+        class ChannelMap < ::FFI::Struct # :nodoc:
           layout :channels, :uint8,
                  :map, [ :int, ::PulseAudio::CHANNELS_MAX ]
     #             :map, [ :channel_position, PulseAudio::CHANNELS_MAX ] FIXME TODO use enums instead of numbers, FFI currently does not support that
         end        
         
-        class SinkPortInfo < ::FFI::Struct
+        class SinkPortInfo < ::FFI::Struct # :nodoc:
           layout :name, :string,
                  :description, :string,
                  :priority, :uint32
         end
 
-        class SourcePortInfo < ::FFI::Struct
+        class SourcePortInfo < ::FFI::Struct # :nodoc:
           layout :name, :string,
                  :description, :string,
                  :priority, :uint32
         end
         
-        class SinkInputInfo < ::FFI::Struct
+        class SinkInputInfo < ::FFI::Struct # :nodoc:
           layout :index, :uint32,
                  :name, :string,
                  :owner_module, :uint32,
@@ -57,7 +57,7 @@ module PulseAudio
                  :proplist, :pointer # FIXME to proplist
         end
         
-        class SourceOutputInfo < ::FFI::Struct
+        class SourceOutputInfo < ::FFI::Struct # :nodoc:
           layout :index, :uint32,
                  :name, :string,
                  :owner_module, :uint32,
@@ -72,7 +72,7 @@ module PulseAudio
                  :proplist, :pointer # FIXME to proplist
         end        
                 
-        class SinkInfo < ::FFI::Struct
+        class SinkInfo < ::FFI::Struct # :nodoc:
           layout :name, :string,
                  :index, :uint32,
                  :description, :string,
@@ -98,7 +98,7 @@ module PulseAudio
                  
         end
         
-        class SourceInfo < ::FFI::Struct
+        class SourceInfo < ::FFI::Struct # :nodoc:
           layout :name, :string,
                  :index, :uint32,
                  :description, :string,
@@ -124,7 +124,7 @@ module PulseAudio
                  
         end        
                 
-        class ModuleInfo < ::FFI::Struct
+        class ModuleInfo < ::FFI::Struct # :nodoc:
           layout :index, :uint32,
                  :name, :string,
                  :argument, :string,
@@ -135,7 +135,7 @@ module PulseAudio
 
 
 
-        class ServerInfo < ::FFI::Struct
+        class ServerInfo < ::FFI::Struct # :nodoc:
           layout :user_name, :string,
                  :host_name, :string,
                  :server_version, :string,

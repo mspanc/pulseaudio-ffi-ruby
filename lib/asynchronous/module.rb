@@ -34,15 +34,6 @@ module PulseAudio
       def inspect # :nodoc:
         "#<#{self.class} ##{index} \"#{name}\">"
       end
-      
-      
-      protected
-        def construct_from_pointer(constructor)
-
-          
-          @loaded = true
-        end
-
     end  
     
     

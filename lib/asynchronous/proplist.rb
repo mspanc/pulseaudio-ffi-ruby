@@ -4,9 +4,10 @@ module PulseAudio
     # pass named variables to sinks, modules and other objects.
     #
     # If you do everything correctly, you should not ever had a need to instantiate it directly.
-    # It is internally instantiated by Context class with values based upon Hash passed to its constructor.
     #
     # Valid key names are defined in VALID_KEYS constant. Please look to original C library documentation[http://0pointer.de/lennart/projects/pulseaudio/doxygen/proplist_8h.html] for key descriptions.
+    #
+    # Currently validation is disabled.
     class PropList
       extend FFI::Library
       ffi_lib LIB_PA
@@ -26,8 +27,8 @@ module PulseAudio
       # +initial_value+ is an optional Hash with initial keys and values.
       def initialize(constructor = nil)
         if constructor.is_a? FFI::Pointer
-          @pointer = pa_proplist_copy constructor
-        
+#          @pointer = pa_proplist_copy constructor
+          @pointer = constructor
         else
           @pointer = pa_proplist_new
           
@@ -54,7 +55,7 @@ module PulseAudio
 
         raise Errors::InvalidValueError, "Specified value '#{value}' for key '#{key}' is invalid. Valid values for this key are #{VALID_ENUM_VALUES[key].join(", ")}." unless VALID_ENUM_VALUES[key].include? value if VALID_ENUM_VALUES.has_key? key
         
-        pa_proplist_sets @pointer, key, value.to_s
+        puts pa_proplist_sets @pointer, key, value.to_s
       end
       
       # Iterate over all keys and values in the proplist
@@ -87,6 +88,7 @@ module PulseAudio
       end
       
       # Returns true when the proplist is empty (has no keys).
+      # FIXME why it always return 0?
       def empty?
         pa_proplist_isempty(@pointer) == 0
       end

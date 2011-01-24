@@ -1,7 +1,7 @@
 module PulseAudio
   module Asynchronous
-    module Types
-      class Typedefs
+    module Types # :nodoc:
+      class Typedefs # :nodoc:
         extend FFI::Library
 
         Volume_t = typedef :uint32, :pa_volume_t

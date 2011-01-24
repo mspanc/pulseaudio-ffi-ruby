@@ -5,14 +5,33 @@
 
 <html>
 <head>
-  <title>modules (PulseAudio::Asynchronous::Context::Operation)</title>
+  <title>subscribe! (PulseAudio::Asynchronous::Context::Operation)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../../../../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/asynchronous/operation/context.rb, line 66</span>
-        <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">modules</span>
-          <span class="ruby-constant">Modules</span>.<span class="ruby-identifier">new</span> <span class="ruby-keyword kw">self</span>
+  <pre><span class="ruby-comment cmt"># File lib/asynchronous/operation/context.rb, line 74</span>
+        <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">subscribe!</span>(<span class="ruby-identifier">subscription_mask</span> = <span class="ruby-identifier">:all</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">b</span>) <span class="ruby-comment cmt"># :yields: operation, success, user_data</span>
+          <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">subscription_mask</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">Array</span>
+            <span class="ruby-identifier">mask</span> = <span class="ruby-identifier">subscription_mask</span>.<span class="ruby-identifier">collect</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span> <span class="ruby-identifier">x</span> <span class="ruby-keyword kw">if</span> [ <span class="ruby-identifier">:null</span>, <span class="ruby-identifier">:sink</span>, <span class="ruby-identifier">:source</span>, <span class="ruby-identifier">:sink_input</span>, <span class="ruby-identifier">:source_output</span>, <span class="ruby-identifier">:module</span>, <span class="ruby-identifier">:client</span>, <span class="ruby-identifier">:sample_cache</span>, <span class="ruby-identifier">:server</span>, <span class="ruby-identifier">:card</span>, <span class="ruby-identifier">:all</span> ].<span class="ruby-identifier">include?</span> <span class="ruby-identifier">x</span> }.<span class="ruby-identifier">compact</span>.<span class="ruby-identifier">uniq</span>
+
+            <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-value str">&quot;You've passed an Array to subscription_mask, so it has to contain at least one of the following symbols: :null, :sink, :source, :sink_input, :source_output, :module, :client, :sample_cache, :server, :card, :all&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">mask</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+            
+            <span class="ruby-identifier">mask</span> = <span class="ruby-identifier">mask</span>.<span class="ruby-identifier">inject</span>(<span class="ruby-value">0</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">memo</span>, <span class="ruby-identifier">obj</span><span class="ruby-operator">|</span> <span class="ruby-identifier">memo</span> <span class="ruby-operator">|</span> <span class="ruby-constant">Types</span><span class="ruby-operator">::</span><span class="ruby-constant">Enums</span><span class="ruby-operator">::</span><span class="ruby-constant">SubscriptionMask</span>[<span class="ruby-identifier">obj</span>] }
+            
+          <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">subscription_mask</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">Symbol</span>
+            <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-value str">&quot;You've passed a Symbol to subscription_mask, so it must be one of :null, :sink, :source, :sink_input, :source_output, :module, :client, :sample_cache, :server, :card, :all&quot;</span> <span class="ruby-keyword kw">unless</span> [ <span class="ruby-identifier">:null</span>, <span class="ruby-identifier">:sink</span>, <span class="ruby-identifier">:source</span>, <span class="ruby-identifier">:sink_input</span>, <span class="ruby-identifier">:source_output</span>, <span class="ruby-identifier">:module</span>, <span class="ruby-identifier">:client</span>, <span class="ruby-identifier">:sample_cache</span>, <span class="ruby-identifier">:server</span>, <span class="ruby-identifier">:card</span>, <span class="ruby-identifier">:all</span> ].<span class="ruby-identifier">include?</span> <span class="ruby-identifier">subscription_mask</span>
+
+            <span class="ruby-identifier">mask</span> = <span class="ruby-constant">Types</span><span class="ruby-operator">::</span><span class="ruby-constant">Enums</span><span class="ruby-operator">::</span><span class="ruby-constant">SubscriptionMask</span>[<span class="ruby-identifier">subscription_mask</span>]
+
+          <span class="ruby-keyword kw">else</span>
+            <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-value str">&quot;subscription_mask must be one of :null, :sink, :source, :sink_input, :source_output, :module, :client, :sample_cache, :server, :card, :all or an array containing combination of these items&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">mask</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+          <span class="ruby-keyword kw">end</span>
+          
+          <span class="ruby-identifier">initialize_success_callback_handler</span>              
+          <span class="ruby-ivar">@block</span> = <span class="ruby-identifier">b</span>
+
+          <span class="ruby-identifier">pa_context_subscribe</span> <span class="ruby-ivar">@parent</span>.<span class="ruby-identifier">pointer</span>, <span class="ruby-identifier">mask</span>, <span class="ruby-ivar">@success_callback_handler</span>, <span class="ruby-keyword kw">nil</span>
         <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>

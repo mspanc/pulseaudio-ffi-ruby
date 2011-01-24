@@ -1,5 +1,18 @@
 module PulseAudio
   module Asynchronous
+    # DaemonObject class is proxy class for all classes that represents PulseAudio objects.
+    #
+    # Currently it is used only to shorten the syntax. Thanks to ruby's method_missing
+    # you can call e.g.
+    #
+    # context.sinks.all do |...|
+    #
+    # instead of
+    # 
+    # context.operation.sinks.all do |...|
+    #
+    # What cuts "operation" call is this class. You can find more information about 
+    # the syntax in the project's wiki[https://github.com/saepia/pulseaudio-ffi-ruby/wiki].
     class DaemonObject
       def method_missing(method, *arg, &b)
         if respond_to? :operation and defined? "#{self.class}::Operation"

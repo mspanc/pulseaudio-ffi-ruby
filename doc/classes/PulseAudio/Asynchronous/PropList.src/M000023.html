@@ -5,19 +5,25 @@
 
 <html>
 <head>
-  <title>[]= (PulseAudio::Asynchronous::PropList)</title>
+  <title>new (PulseAudio::Asynchronous::PropList)</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
 </head>
 <body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/asynchronous/proplist.rb, line 51</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-operator">[]=</span>(<span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span>)
-        <span class="ruby-comment cmt"># TODO custom module properties like module-stream-restore.id</span>
-<span class="ruby-comment cmt">#        raise Errors::InvalidKeyError, &quot;Specified key '#{key}' is invalid. Valid keys are #{VALID_KEYS.join(&quot;, &quot;)}.&quot; unless VALID_KEYS.include? key</span>
-
-        <span class="ruby-identifier">raise</span> <span class="ruby-constant">Errors</span><span class="ruby-operator">::</span><span class="ruby-constant">InvalidValueError</span>, <span class="ruby-node">&quot;Specified value '#{value}' for key '#{key}' is invalid. Valid values for this key are #{VALID_ENUM_VALUES[key].join(&quot;, &quot;)}.&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">VALID_ENUM_VALUES</span>[<span class="ruby-identifier">key</span>].<span class="ruby-identifier">include?</span> <span class="ruby-identifier">value</span> <span class="ruby-keyword kw">if</span> <span class="ruby-constant">VALID_ENUM_VALUES</span>.<span class="ruby-identifier">has_key?</span> <span class="ruby-identifier">key</span>
-        
-        <span class="ruby-identifier">pa_proplist_sets</span> <span class="ruby-ivar">@pointer</span>, <span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_s</span>
+  <pre><span class="ruby-comment cmt"># File lib/asynchronous/proplist.rb, line 28</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">constructor</span> = <span class="ruby-keyword kw">nil</span>)
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">constructor</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">FFI</span><span class="ruby-operator">::</span><span class="ruby-constant">Pointer</span>
+<span class="ruby-comment cmt">#          @pointer = pa_proplist_copy constructor</span>
+          <span class="ruby-ivar">@pointer</span> = <span class="ruby-identifier">constructor</span>
+        <span class="ruby-keyword kw">else</span>
+          <span class="ruby-ivar">@pointer</span> = <span class="ruby-identifier">pa_proplist_new</span>
+          
+          <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">constructor</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">Hash</span>
+            <span class="ruby-identifier">initial_value</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span><span class="ruby-operator">|</span>
+              <span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">key</span>]= <span class="ruby-identifier">value</span>
+            <span class="ruby-keyword kw">end</span>
+          <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">end</span>
       <span class="ruby-keyword kw">end</span></pre>
 </body>
 </html>
